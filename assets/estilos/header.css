@@ -1,0 +1,58 @@
+header {
+  background-color: #f9f6f0;
+  color: #102b42;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  height: 12vh;
+}
+
+.nav-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  background-image: url("../imagenes/logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.nav-left {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-button,
+.login-btn {
+  color: #102b42;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  height: 39px;
+}
+
+.nav-button:hover {
+  background-color: #d8cfc1;
+  transform: scale(1.05);
+}
+
+.login-btn {
+  background: none;
+  border: 1px solid #102b42;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #102b42;
+  transform: scale(1.05);
+  color: white;
+}

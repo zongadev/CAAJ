@@ -1,0 +1,288 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-areas: "index article";
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+  margin: auto 0;
+  align-items: start;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.page-index h2 {
+  margin-bottom: 1rem;
+}
+
+.page-index a {
+  text-decoration: none;
+  color: #102b42;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-left: 2rem;
+}
+
+.article-subheading {
+  font-size: 1.5rem;
+  padding-top: 2rem;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.page-index {
+  grid-area: index;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.page-index ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page-index li {
+  margin-bottom: 0.5rem;
+}
+
+.note-article {
+  grid-area: article;
+  text-align: left;
+}
+
+.note-article h1 {
+  margin-bottom: 0.5rem;
+}
+
+.note-article .author {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-areas:
+      "article"
+      "index";
+    grid-template-columns: 1fr;
+  }
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-areas: "index article";
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+  margin: auto 0;
+  align-items: start;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.page-index h2 {
+  margin-bottom: 1rem;
+}
+
+.page-index a {
+  text-decoration: none;
+  color: #102b42;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-left: 2rem;
+}
+
+.article-subheading {
+  font-size: 1.5rem;
+  padding-top: 2rem;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.page-index {
+  grid-area: index;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.page-index ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page-index li {
+  margin-bottom: 0.5rem;
+}
+
+.note-article {
+  grid-area: article;
+  text-align: left;
+}
+
+.note-article h1 {
+  margin-bottom: 0.5rem;
+}
+
+.note-article .author {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-areas:
+      "article"
+      "index";
+    grid-template-columns: 1fr;
+  }
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-areas: "index article";
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+  margin: auto 0;
+  align-items: start;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.page-index h2 {
+  margin-bottom: 1rem;
+}
+
+.page-index a {
+  text-decoration: none;
+  color: #102b42;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-left: 2rem;
+}
+
+.article-subheading {
+  font-size: 1.5rem;
+  padding-top: 2rem;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.page-index {
+  grid-area: index;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.page-index ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page-index li {
+  margin-bottom: 0.5rem;
+}
+
+.note-article {
+  grid-area: article;
+  text-align: left;
+}
+
+.note-article h1 {
+  margin-bottom: 0.5rem;
+}
+
+.note-article .author {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-areas:
+      "article"
+      "index";
+    grid-template-columns: 1fr;
+  }
+}

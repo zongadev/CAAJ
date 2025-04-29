@@ -1,0 +1,51 @@
+footer {
+  background: #f9f6f0;
+  color: #102b42;
+  text-align: center;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.socials a {
+  margin-right: 1rem;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.socials a:hover {
+  transform: scale(1.05);
+}
+
+.socials span {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.logo-facebook {
+  background: url("../imagenes/logo-facebook.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.logo-instagram {
+  background: url("../imagenes/logo-instagram.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.logo-twitter {
+  background: url("../imagenes/logo-twitter.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.logo-linkedin {
+  background: url("../imagenes/logo-linkedin.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}

@@ -1,0 +1,86 @@
+
+body{
+    margin: 0;
+    background-color: #ebe3d4;
+    color: #fff;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.registerfondo{
+    background-color: #ac352a;
+    color: #142a3f;
+    padding: 60px 80px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 10px 10px 24px 0px rgba(0,0,0,0.36);
+    text-align: center;
+    display: flex;
+    flex-direction:column;
+}
+
+.registerfondo h1 {
+    margin-bottom: 20px;
+    color: #ebe3d4;
+}
+
+.registerfondo label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+    color: #ebe3d4;
+    font-size: 18px;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.registerfondo input[type="text"],
+.registerfondo input[type="email"],
+.registerfondo input[type="password"] {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: none;
+}
+
+.registerfondo input[type="submit"],
+.registerfondo input[type="reset"]{
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #142a3f;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.registerfondo input[type="submit"]:hover,
+.registerfondo input[type="reset"]:hover{
+    background-color:rgba(20, 42, 63, 0.86);
+    transform: scale(1.05);
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 10px;
+    padding-inline: 1rem;
+}
+
+.links a {
+    font-size: 0.95rem;
+    color: #ebe3d4;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}

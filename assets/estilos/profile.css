@@ -1,0 +1,150 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-areas: "sidebar content";
+  grid-template-columns: 1fr 6fr; /* Sidebar ocupa 1fr, content 3fr */
+  gap: 2rem;
+  width: 100%;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.page-sidebar {
+  grid-area: sidebar;
+  background-color: #142a3f;
+  padding: 1.5rem 1rem;
+  color: #ebe3d4;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  border-radius: 15px;
+}
+
+
+.page-sidebar h2 {
+  margin-bottom: 1rem;
+}
+
+.page-sidebar a {
+  text-decoration: none;
+  
+  color: #102b42;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-left: 2rem;
+}
+
+.page-sidebar p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-left: 3px solid #ac352a;
+  padding-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  padding: 2rem;
+  position: relative;
+  width: 100%;
+}
+
+.page-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page-sidebar li {
+  margin-bottom: 0.5rem;
+}
+
+.note-content {
+  grid-area: content;
+  background-color: #f9f6f0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.note-content h1 {
+  margin-bottom: 4rem;
+  color: #142a3f;
+}
+
+.note-content h2 {
+  margin-bottom: 1rem;
+  color: #142a3f;
+}
+
+.note-content p {
+  margin-bottom: 4rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #142a3f;
+}
+
+.note-content a {
+  text-decoration: none;
+  color: #102b42;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-inline: 4rem;
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-areas:
+      "content"
+      "sidebar";
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Profile Page Styles */
+.lista-apuntes {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.lista-apuntes a {
+  padding: 10px 20px;
+  background-color: #142a3f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.lista-apuntes a:hover {
+  background-color:rgba(20, 42, 63, 0.86);
+  transform: scale(1.05);
+}

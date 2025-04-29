@@ -1,0 +1,83 @@
+.grid {
+  display: grid;
+  grid-template-rows: 120px 1fr 60px;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  height: 100vh;
+}
+
+/*main*/
+.main-content {
+  grid-area: main;
+  padding: 2rem;
+  color: #142a3f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.logo {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  background-image: url("../imagenes/logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+.search-bar input:focus {
+  border: none;
+  outline: none;
+}
+
+.search-bar span {
+  margin-right: 1rem;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background: url("../imagenes/search-outline.svg") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #f0f0f0;
+  border-radius: 4px;
+  display: none;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
