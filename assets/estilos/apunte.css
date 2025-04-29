@@ -10,7 +10,6 @@ body {
 }
 
 .content-grid {
-  flex: 1;
   display: grid;
   grid-template-areas: "index article";
   grid-template-columns: 1fr 3fr;
@@ -93,4 +92,94 @@ h1 {
       "index";
     grid-template-columns: 1fr;
   }
+}
+
+/* No se si deberiamos de centrarlo pero 
+   no queda mal asi cuando lo ves pantalla completa.*/
+.comment-box{
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment-box label {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-box textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical; /* Permite al usuario agrandar el textbox verticalmente */
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.comment-box button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.comment-box button:hover {
+  background-color: #45a049;
+}
+
+.commentaries-section{
+  max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.commentaries-section h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.commentaries-section .comment{
+  margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.commentaries-section .author{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.commentaries-section .author-img{
+  width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.commentaries-section .author label{
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+.commentaries-section .comment label{
+  font-size: 14px;
+    color: #555;
+    line-height: 1.5;
 }
