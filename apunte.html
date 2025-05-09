@@ -23,8 +23,8 @@
     <div class="main">
       <div class="content-grid">
         <nav class="page-index">
-          <h2>Índice</h2>
-          <ul>
+          <h2 class="item">Índice</h2>
+          <ul class="item">
             <li><a href="#section1">Introducción</a></li>
             <li><a href="#section2">Capítulo 1</a></li>
             <li><a href="#section3">Capítulo 2</a></li>
@@ -32,6 +32,11 @@
             <li><a href="#section5">Capítulo 4</a></li>
             <li><a href="#section6">Capítulo 5</a></li>
           </ul>
+          <div class="vote-section">
+            <a href="#" class="vote-btn upvote" title="Me gusta"></a>
+            <span class="vote-count">23</span>
+            <a href="#" class="vote-btn downvote" title="No me gusta"></a>
+          </div>
         </nav>
 
         <article class="note-article">
@@ -144,7 +149,23 @@
             habló, un pulpo los iluminó, y una licuadora los llevó a su destino
             de bros interdimensionales.
           </p>
+          <div class="comments-section">
+            <h3>Comentarios</h3>
+            <form class="comment-form">
+              <textarea placeholder="Escribí un comentario..." required></textarea>
+              <button type="submit">Publicar</button>
+            </form>
+  
+            <div class="comment">
+              <p><strong>María:</strong> Este apunte me hizo reír más que estudiar. Gracias.</p>
+            </div>
+            <div class="comment">
+              <p><strong>Carlos:</strong> ¡Increíble historia interdimensional! Aguante Yogurles.</p>
+            </div>
+          </div>
         </article>
+
+        
       </div>
     </div>
 
