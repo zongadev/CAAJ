@@ -121,7 +121,7 @@ h1 {
 }
 
 .comment-box button {
-  background-color: #4CAF50;
+  background-color: #102b42;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -131,7 +131,7 @@ h1 {
 }
 
 .comment-box button:hover {
-  background-color: #45a049;
+  background-color: rgba(16, 43, 66, 0.9);
 }
 
 .commentaries-section{
