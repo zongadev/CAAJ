@@ -18,17 +18,18 @@ function checkemail(emailID){
     if(testeo){
         normalCambiarColorField(emailID)
     }
-    return re.test(emailID)
+    return testeo
 }
 
 function checkpassword(passID){
-    const re = new RegExp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$")
+    const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")
     var testeo = re.test(document.getElementById(passID).value)
     if(!testeo){
         errorCambiarColorField(passID)
     }
     if(testeo){
         normalCambiarColorField(passID)
+        console.log("Hola")
     }
-    return re.test(passID)
+    return testeo
 }
