@@ -9,27 +9,30 @@ function errorCambiarColorField(id){
 function normalCambiarColorField(id){
     document.getElementById(id).style.background = COLOR_FONDO_NORMAL;
 }
-function checkemail(emailID){
-    const re = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-    var testeo = re.test(document.getElementById(emailID).value)
-    if(!testeo){
-        errorCambiarColorField(emailID)
-    }
-    if(testeo){
-        normalCambiarColorField(emailID)
-    }
-    return testeo
-}
 
-function checkpassword(passID){
-    const re = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")
-    var testeo = re.test(document.getElementById(passID).value)
-    if(!testeo){
-        errorCambiarColorField(passID)
+function customValidez(campo,txt){
+    campo.addEventListener("invalid", function(){
+            if(campo.validity.valueMissing){
+                campo.setCustomValidity(txt);
+            }
+            if(campo.validity.patternMismatch){
+                campo.setCustomValidity(txt);
+            }
+        });
+}
+function check(ID){
+    campo = document.getElementById(ID)
+    
+    if(campo.validity.valueMissing){
+        customValidez(campo,"Este campo debe de estar completo")
+        ///cada vez que chequea, actualiza el Validity
     }
-    if(testeo){
-        normalCambiarColorField(passID)
-        console.log("Hola")
+    if(campo.validity.patternMismatch){
+        customValidez(campo,"El formato es incorrecto")
+        errorCambiarColorField(ID)
     }
-    return testeo
+    if(!campo.validity.patternMismatch){
+        normalCambiarColorField(ID)
+    }
+    
 }
