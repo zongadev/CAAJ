@@ -2,6 +2,7 @@
 COLOR_FONDO_ERROR = '#ff6565';
 COLOR_FONDO_NORMAL= '#FFFFFF'
 
+
 function errorCambiarColorField(id){
     document.getElementById(id).style.background = COLOR_FONDO_ERROR;
 }
@@ -34,4 +35,5 @@ function check(ID){
     if(!campo.validity.patternMismatch){
         normalCambiarColorField(ID)
     }
+    
 }
