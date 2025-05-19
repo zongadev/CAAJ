@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="./assets/estilos/header.css" />
     <link rel="stylesheet" href="./assets/estilos/global.css" />
     <link rel="stylesheet" href="./assets/estilos/footer.css" />
+    <script src="./assets/js/editor.js"></script>
+
   </head>
   <body>
     <div class="grid">
@@ -34,12 +36,12 @@
             <option value="calculo">Calculo Elemental</option>
           </select>
         
-          <textarea class="input redondeado" rows="10" placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..."></textarea>
+          <textarea class="input redondeado" rows="10" placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..." required></textarea>
         
           <input type="text" class="input redondeado" placeholder="Etiquetas (separadas por comas)" />
 
           <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
-          <input type="file" id="archivo" class="input redondeado" />
+          <input type="file" id="archivo" class="input redondeado" required/>
         
           <button type="submit" class="publicar-btn">Publicar</button>
         </form>
