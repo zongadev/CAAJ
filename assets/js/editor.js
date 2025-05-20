@@ -10,11 +10,13 @@ function check(ID) { // Chequea el campo
   } else if (campo.validity.patternMismatch) { // Si el formato es incorrecto
     customValidez(campo, "El formato es incorrecto");
   } else {
-    campo.setCustomValidity(""); // Si el campo es válido, no se establece un mensaje de error
+    campo.setCustomValidity(""); // Si el campo es válido, limpia el mensaje
   }
   campo.reportValidity(); // Muestra el mensaje de error si es necesario
 }
 
+//se ejecuta al abrir la pagina, recorre todos los campos 
+// que tengan la clase .editor-form y le asigna la funcion anonima
 document.querySelector('.editor-form').addEventListener('submit', function (e) { // Al enviar el formulario
     let campos = ['titulo', 'contenido']; // lista de IDs de los campos a validar
     let valido = true;
