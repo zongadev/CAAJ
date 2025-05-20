@@ -3,37 +3,39 @@ COLOR_FONDO_ERROR = '#ff6565';
 COLOR_FONDO_NORMAL= '#FFFFFF'
 
 
-function errorCambiarColorField(id){
-    document.getElementById(id).style.background = COLOR_FONDO_ERROR;
+function errorCambiarColorField(campo){
+    campo.style.background = COLOR_FONDO_ERROR;
 }
 
-function normalCambiarColorField(id){
-    document.getElementById(id).style.background = COLOR_FONDO_NORMAL;
+function normalCambiarColorField(campo){
+    campo.style.background = COLOR_FONDO_NORMAL;
 }
 
-function customValidez(campo,txt){
-    campo.addEventListener("invalid", function(){
-            if(campo.validity.valueMissing){
-                campo.setCustomValidity(txt);
-            }
-            if(campo.validity.patternMismatch){
-                campo.setCustomValidity(txt);
-            }
-        });
-}
 function check(ID){
     campo = document.getElementById(ID)
-    campo.setCustomValidity("")
     if(campo.validity.valueMissing){
-        customValidez(campo,"Este campo debe de estar completo")
-        ///cada vez que chequea, actualiza el Validity
+        console.log("hola");
+        errorCambiarColorField(campo)
     }
     if(campo.validity.patternMismatch){
-        customValidez(campo,"El formato es incorrecto")
-        errorCambiarColorField(ID)
+        errorCambiarColorField(campo)
+    }else{
+        normalCambiarColorField(campo)
     }
-    if(!campo.validity.patternMismatch){
-        normalCambiarColorField(ID)
-    }
-    
 }
+
+//e es el evento al submitear
+document.querySelector("#regis-form").addEventListener('submit',function (e) { // Al enviar el formulario
+    let campos = ['nom01','ape01','mail01','con01']; // lista de IDs de los campos a validar
+    let valido = true;
+    for (var i = 0; i < campos.length; i++) { // Recorre los campos
+      var id = campos[i];
+      var campo = document.getElementById(id); // Obtiene el campo por ID
+      if (!campo.checkValidity()) { // Si el campo no es false, se bolquea el envio
+        valido = false;
+      }
+    }
+    if (!valido) {
+        e.preventDefault();  //evita el submit 
+    }
+  });

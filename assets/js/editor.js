@@ -18,7 +18,7 @@ function check(ID) { // Chequea el campo
 //se ejecuta al abrir la pagina, recorre todos los campos 
 // que tengan la clase .editor-form y le asigna la funcion anonima
 document.querySelector('.editor-form').addEventListener('submit', function (e) { // Al enviar el formulario
-    let campos = ['titulo', 'contenido']; // lista de IDs de los campos a validar
+    let campos = ['titulo', 'contenido','tags','archivo']; // lista de IDs de los campos a validar
     let valido = true;
     for (var i = 0; i < campos.length; i++) { // Recorre los campos
       var id = campos[i];

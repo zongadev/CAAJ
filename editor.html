@@ -27,7 +27,7 @@
       <main class="main-content">
         <h1 class="titulo">Nueva publicacion</h1>
         <form class="editor-form">
-          <input type="text" placeholder="Título de la publicación" class="input redondeado" required />
+          <input id= "titulo"type="text" placeholder="Título de la publicación" class="input redondeado" required />
         
           <select class="input redondeado" required>
             <option value="" disabled selected>Seleccioná una materia</option>
@@ -36,13 +36,13 @@
             <option value="calculo">Calculo Elemental</option>
           </select>
         
-          <textarea class="input redondeado" rows="10" placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..." required></textarea>
+          <textarea id="contenido" class="input redondeado" rows="10" placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..." required></textarea>
         
-          <input type="text" class="input redondeado" placeholder="Etiquetas (separadas por comas)" />
+          <input id="tags"type="text" class="input redondeado" placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)" pattern="^(\s*|[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*)$
+" />
 
           <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
           <input type="file" id="archivo" class="input redondeado" required/>
-        
           <button type="submit" class="publicar-btn">Publicar</button>
         </form>
         

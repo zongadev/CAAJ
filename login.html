@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./assets/estilos/header.css" />
     <link rel="stylesheet" href="./assets/estilos/global.css" />
     <link rel="stylesheet" href="./assets/estilos/footer.css" />
-    <script src="./assets/js/login.js"> </script>
+   
 
 </head>
     
@@ -17,7 +17,7 @@
        
     <div class="loginfondo">
         <h1>Iniciar sesion</h1>
-    <form action="#" method="post" onsubmit="enviar(this)"> 
+    <form id="form" action="#" method="post" onsubmit="enviar(this)"> 
         <label for="mail">Mail<br></label>
         <input type="text" name="mail" id="mail" required pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" onblur="check(this.id)">
         <br> <br>
@@ -33,5 +33,6 @@
         </div>
     </form>
     </div>
+    <script src="./assets/js/login.js"> </script>
 </body>
 </html>
