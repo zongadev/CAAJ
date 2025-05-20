@@ -32,8 +32,6 @@ CREATE TABLE `alumno` (
   `USU_ID` int(11) NOT NULL,
   `ALU_NOMBRE` varchar(50) NOT NULL,
   `ALU_APELLIDO` varchar(50) NOT NULL,
-  `ALU_LEGAJO` varchar(20) NOT NULL,
-  `ALU_DNI` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
