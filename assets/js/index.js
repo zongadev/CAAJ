@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const suggestions = [
+document.addEventListener("DOMContentLoaded", () => { //DOM, Document Object model. es decir, cuando ya cargo el html.
+  const suggestions = [ //claramente esta lista no va a ser estatica
     "Calculo Elementeal",
     "Calculo Avanzado",
     "Algebra y Geometria",
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Informatica General",
     "Fisica I",
   ];
-  const searchInput = document.getElementById("search");
+  const searchInput = document.getElementById("search"); //en la barra
   const suggestionsBox = document.getElementById("suggestions");
 
   searchInput.addEventListener("input", () => {
