@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login-CAAJ</title>
-    <link rel="stylesheet" href="./assets/estilos/login.css">
+    <link rel="stylesheet" href="./assets/estilos/login.css" />
     <link rel="stylesheet" href="./assets/estilos/header.css" />
     <link rel="stylesheet" href="./assets/estilos/global.css" />
     <link rel="stylesheet" href="./assets/estilos/footer.css" />
-   
-
-</head>
-    
-<body>
-       
+  </head>
+  <body>
     <div class="loginfondo">
-        <h1>Iniciar sesion</h1>
-    <form id="form" action="#" method="post" onsubmit="enviar(this)"> 
-        <label for="mail">Mail<br></label>
-        <input type="text" name="mail" id="mail" required pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" onblur="check(this.id)">
-        <br> <br>
-        <label for="con">Contraseña <br></label>
-        <input type="password" name="contra" id="con" required pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$" onblur="check(this.id)">
-        <br> <br>
-        <input type="submit" value="Ingresar">
-        <input type="reset" value="Resetear">
-        <br>
-        <div class="links">
+      <h1>Iniciar sesion</h1>
+      <form id="form" action="#" method="post">
+        <div class="form-group">
+          <label for="mail">Mail</label>
+          <input
+            type="text"
+            name="mail"
+            id="mail"
+            required
+            onblur="check(this.id)"
+          />
+          <span class="error-msg" id="error-mail"></span>
+        </div>
+        <div class="form-group">
+          <label for="con">Contraseña</label>
+          <input
+            type="password"
+            name="contra"
+            id="con"
+            required
+            onblur="check(this.id)"
+          />
+          <span class="error-msg" id="error-con"></span>
+        </div>
+        <div class="form-footer">
+          <input type="submit" value="Ingresar" />
+          <input type="reset" value="Resetear" />
+          <br />
+          <div class="links">
             <a href="register.html">Registrarse</a>
             <a href="index.html">Volver</a>
+          </div>
         </div>
-    </form>
+      </form>
     </div>
-    <script src="./assets/js/login.js"> </script>
-</body>
+    <script src="./assets/js/login.js"></script>
+  </body>
 </html>

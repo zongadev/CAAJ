@@ -1,111 +1,130 @@
-body{
-    margin: 0;
-    background-color: #ebe3d4;
-    color: #fff;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+body {
+  margin: 0;
+  background-color: #ebe3d4;
+  color: #fff;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .loginfondo {
-    background-color: #ac352a;
-    color: #142a3f;
-    padding: 30px 40px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 10px 10px 24px 0px rgba(0,0,0,0.36);
-    text-align: center;
-    display: flex; 
-    flex-direction: column;
+  background-color: #ac352a;
+  color: #142a3f;
+  padding: 30px 40px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 10px 10px 24px 0px rgba(0, 0, 0, 0.36);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
-.loginfondo h1{
-    margin-bottom: 20px;
-    color: #ebe3d4;
+.loginfondo h1 {
+  margin-bottom: 20px;
+  color: #ebe3d4;
 }
 
-.loginfondo label{
-    display: block;
-    margin: 15px 0 5px;
-    font-weight: bold;
-    color: #ebe3d4;
-    text-decoration: none;
-    font-size: 18px;
-    font-style: italic;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-
+.loginfondo label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+  color: #ebe3d4;
+  text-decoration: none;
+  font-size: 18px;
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .loginfondo input[type="text"],
 .loginfondo input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    margin-bottom: 15px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .loginfondo input[type="submit"],
 .loginfondo input[type="reset"] {
-    padding: 8px 15px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-    background-color: #142a3f;
-    color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 8px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #142a3f;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .loginfondo input[type="submit"]:hover,
 .loginfondo input[type="reset"]:hover {
-    background-color:rgba(20, 42, 63, 0.86);
-    transform: scale(1.05);
+  background-color: rgba(20, 42, 63, 0.86);
+  transform: scale(1.05);
 }
 
 .loginfondo a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #ebe3d4;
-    text-decoration: none;
-    font-size: 15px;
-
-    
+  display: inline-block;
+  margin-top: 10px;
+  color: #ebe3d4;
+  text-decoration: none;
+  font-size: 15px;
 }
 
-.loginfondo a:hover{
-    text-decoration: underline;
-    color: #ffffff;
+.loginfondo a:hover {
+  text-decoration: underline;
+  color: #ffffff;
 }
-form{
-    align-self: center;
+form {
+  width: 100%;
 }
-input{
-    padding: 6px;
-    font-size: 1rem;
-    border: 1px solid #27272762;
-    border-radius: 5px;
+input {
+  padding: 6px;
+  font-size: 1rem;
+  border: 1px solid #27272762;
+  border-radius: 5px;
 }
 
 .links {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 10px;
-    padding-inline: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 10px;
+  padding-inline: 1rem;
 }
 
 .links a {
-    font-size: 0.95rem;
-    color: #ebe3d4;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  font-size: 0.95rem;
+  color: #ebe3d4;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .links a:hover {
-    text-decoration: underline;
-    color: #ffffff;
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.error-msg {
+  color: #ff6565;
+  font-size: 0.95em;
+  margin-top: 2px;
+  margin-bottom: 0;
+  display: block;
+  min-height: 1.2em;
+  float: none;
+}
+
+.form-footer {
+  margin-top: 10px;
 }
