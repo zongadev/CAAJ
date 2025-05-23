@@ -89,7 +89,7 @@ document.querySelector("#submit-btn").addEventListener("click", function (e) {
   }
 });
 
-// Real-time validation (input/change)
+// Validar cambios en los inputs en tiempo real
 ["titulo", "materia", "contenido", "tags", "archivo", "visibilidad"].forEach(function (id) {
   var campo = document.getElementById(id);
   if (campo) {
