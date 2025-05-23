@@ -19,18 +19,6 @@ function normalCambiarColorField(campo) {
   campo.style.background = COLOR_FONDO_NORMAL;
 }
 
-<<<<<<< Updated upstream
-function check(ID){
-    campo = document.getElementById(ID)
-    if(campo.validity.valueMissing){
-        console.log("hola");
-        errorCambiarColorField(campo)
-    }
-    if(campo.validity.patternMismatch){
-        errorCambiarColorField(campo)
-    }else{
-        normalCambiarColorField(campo)
-=======
 function errorCambiarColorField(campo) {
   campo.style.background = COLOR_FONDO_ERROR;
 }
@@ -84,7 +72,6 @@ function check(ID) {
         "Mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
     } else {
       normalCambiarColorField(campo);
->>>>>>> Stashed changes
     }
 }
 
