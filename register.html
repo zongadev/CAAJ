@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,32 +9,42 @@
     <link rel="stylesheet" href="./assets/estilos/header.css" />
     <link rel="stylesheet" href="./assets/estilos/global.css" />
     <link rel="stylesheet" href="./assets/estilos/footer.css" />
-    <script src="./assets/js/register.js"> </script>
+    
 </head>
 <body>
     <div class="registerfondo">
         <h1>Registrarse</h1>
-
     <form id="regis-form" action="" >
-        <label for="nom01">Nombre</label >
-        <input type="text" name="nombre" id="nom01"required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$" title="Solo letras y espacios." onblur="check(this.id)">
-        <br>
-        <label for="ape01">Apellido</label>
-        <input type="text" name="apellido" id="ape01" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:[ '\-][A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$" onblur="check(this.id)" >
-        <br>
-        <label for="mail01">Mail</label>
-        <input type="email" name="mail" id="mail01" required pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" onblur="check(this.id)" >
-        <br>
-        <label for="con01">Contraseña</label>
-        <input type="password" name="contra" id="con01" required pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$" onblur="check(this.id)">
-        <br>
-        <input type="submit" value="Enviar">
-        <input type="reset" value="Resetear">
-        <br>
-        <div class="links">
-            <a href="login.html">Iniciar sesión</a>
-            <a href="index.html">Volver</a>
+        <div class="form-group">
+            <label for="nom01">Nombre</label>
+            <input type="text" name="nombre" id="nom01" required title="Solo letras y espacios." onblur="check(this.id)">
+            <span class="error-msg" id="error-nom01"></span>
+        </div>
+        <div class="form-group">
+            <label for="ape01">Apellido</label>
+            <input type="text" name="apellido" id="ape01" required onblur="check(this.id)" >
+            <span class="error-msg" id="error-ape01"></span>
+        </div>
+        <div class="form-group">
+            <label for="mail01">Mail</label>
+            <input type="email" name="mail" id="mail01" required onblur="check(this.id)" >
+            <span class="error-msg" id="error-mail01"></span>
+        </div>
+        <div class="form-group">
+            <label for="con01">Contraseña</label>
+            <input type="password" name="contra" id="con01" required onblur="check(this.id)">
+            <span class="error-msg" id="error-con01"></span>
+        </div>
+        <div class="form-footer">
+            <input type="submit" value="Enviar" id="submit-btn">
+            <input type="reset" value="Resetear">
+            <br>
+            <div class="links">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="index.html">Volver</a>
+            </div>
         </div>
     </form>
+    <script src="./assets/js/register.js"></script>
 </body>
 </html>

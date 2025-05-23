@@ -58,7 +58,7 @@ main {
 }
 
 .materias a:hover {
-  background-color:rgba(20, 42, 63, 0.86);
+  background-color: rgba(20, 42, 63, 0.86);
   transform: scale(1.05);
 }
 /* editor */
@@ -145,4 +145,23 @@ input[type="file"]::file-selector-button {
 
 input[type="file"]::file-selector-button:hover {
   background-color: rgba(20, 42, 63, 0.86);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.error-msg {
+  color: #ff6565;
+  font-size: 0.95em;
+  margin-top: 2px;
+  margin-bottom: 0;
+  display: block;
+  min-height: 1.2em;
+  width: 100%;
+  box-sizing: border-box;
 }

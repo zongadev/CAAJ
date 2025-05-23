@@ -20,7 +20,7 @@
         </a>
       </header>
 
-    <div class="main">
+    <main class="main">
       <div class="content-grid">
         <nav class="page-index">
           <h2 class="item">Índice</h2>
@@ -149,21 +149,26 @@
             habló, un pulpo los iluminó, y una licuadora los llevó a su destino
             de bros interdimensionales.
           </p>
-        </article>
+          <!-- esta medio confuso capaz lo de comment
+          el de aca abajo es la caja de comentarios y el de arriba
+          es el textbox para que los escribas-->
+          <div class="comment-box"> 
+            <label for="comment">Deja tu comentario:</label>
+            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
+            <span class="error-msg" id="error-comment"></span>
+            <button type="submit" id="publicar-comentario-btn submit-btn">Publicar comentario</button>
+          </div>
+          <div class="commentaries-section">
+            <h3>Comentarios</h3>
+            <div class="comment">
+              <div class="author"> 
+                <img src="no hay foto xd" class="author-img">
+                <label for="author"> user </label><br>
+              </div>
+              <label for="author-comment"> Este es el comentario de un usuario random</label>
+            </div>
 
-        
-      </div>
-      <br><br>
-      <div class="comment-box"> 
-        <label for="comment">Puedes dejar tu comentario:</label>
-        <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
-        <button type="submit">Publicar comentario</button>
-      </div>
-      <!-- esta medio confuso capaz lo de comment
-       el de aca abajo es la caja de comentarios y el de arriba
-       es el textbox para que los escribas-->
-    <div class="commentaries-section">
-        <h3>Comentarios</h3>
+        <!-- Copio y pego para que haya otro pero es puro ejemplo BORRER ENTRE COMENTARIOS-->
         <div class="comment">
           <div class="author"> 
             <img src="no hay foto xd" class="author-img">
@@ -172,35 +177,28 @@
           <label for="author-comment"> Este es el comentario de un usuario random</label>
         </div>
 
-    <!-- Copio y pego para que haya otro pero es puro ejemplo BORRER ENTRE COMENTARIOS-->
-    <div class="comment">
-      <div class="author"> 
-        <img src="no hay foto xd" class="author-img">
-        <label for="author"> user </label><br>
+        <div class="comment">
+          <div class="author"> 
+            <img src="no hay foto xd" class="author-img">
+            <label for="author"> user3 </label><br>
+          </div>
+          <label for="author-comment"> Este es el comentario del que usted profe penso que era un burro gil de mierda y la re concha de tu madre </label>
+        </div>
+
+        <div class="comment">
+          <div class="author"> 
+            <img src="no hay foto xd" class="author-img">
+            <label for="author"> user4 </label><br>
+          </div>
+          <label for="author-comment"> Este es el comentario de un usuario random</label>
+        </div>
+
+        <!-- Copio y pego para que haya otro pero es puro ejemplo BORRAR ENTRE COMENTARIOS EN OTRO MOMENTO-->
+
+          </div>
+        </article>
       </div>
-      <label for="author-comment"> Este es el comentario de un usuario random</label>
-    </div>
-
-    <div class="comment">
-      <div class="author"> 
-        <img src="no hay foto xd" class="author-img">
-        <label for="author"> user3 </label><br>
-      </div>
-      <label for="author-comment"> Este es el comentario del que usted profe penso que era un burro gil de mierda y la re concha de tu madre </label>
-    </div>
-
-    <div class="comment">
-      <div class="author"> 
-        <img src="no hay foto xd" class="author-img">
-        <label for="author"> user4 </label><br>
-      </div>
-      <label for="author-comment"> Este es el comentario de un usuario random</label>
-    </div>
-
-    <!-- Copio y pego para que haya otro pero es puro ejemplo BORRAR ENTRE COMENTARIOS EN OTRO MOMENTO-->
-
-    </div>
-
+    </main>
     <footer>
       <div>© 2025 CAAJ. Todos los derechos reservados.</div>
       <div class="socials">
@@ -210,7 +208,6 @@
         <a href="http://google.com"><span class="logo-twitter"></span></a>
       </div>
     </footer>
-
-    <script src="./assets/js/index.js"></script>
+    <script src="./assets/js/comments.js"></script>
   </body>
 </html>

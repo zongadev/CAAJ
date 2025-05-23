@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="./assets/estilos/header.css" />
     <link rel="stylesheet" href="./assets/estilos/global.css" />
     <link rel="stylesheet" href="./assets/estilos/footer.css" />
-
   </head>
   <body>
     <div class="grid">
@@ -18,42 +17,106 @@
           <a class="nav-button" href="./materias.html">Materias</a>
           <a class="nav-button" href="./materias.html">Mis apuntes</a>
         </div>
-        <a class="login-btn" href="./login.html">
-          Hola, Usuario
-        </a>
+        <a class="login-btn" href="./login.html"> Hola, Usuario </a>
       </header>
 
       <main class="main-content">
         <h1 class="titulo">Nueva publicacion</h1>
         <form class="editor-form">
-          <input id="titulo" type="text" placeholder="Título de la publicación" class="input redondeado" required />
-        
-          <select class="input redondeado" required>
-            <option value="" disabled selected>Seleccioná una materia</option>
-            <option value="infogen">Informatica General</option>
-            <option value="pwbeb">Programacion Web y Movil</option>
-            <option value="calculo">Calculo Elemental</option>
-          </select>
-        
-          <textarea id="contenido" class="input redondeado" rows="10" placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..." required></textarea>
-        
-          <input id="tags"type="text" class="input redondeado" placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)" pattern="^(\s*|[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*)$"/>
-
-          <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
-          <input id="archivo" type="file" class="input redondeado" required/>
-          <button type="submit" class="publicar-btn">Publicar</button>
+          <div class="form-group">
+            <input
+              id="titulo"
+              type="text"
+              placeholder="Título de la publicación"
+              class="input redondeado"
+              required
+            />
+            <span class="error-msg" id="error-titulo"></span>
+          </div>
+          <div class="form-group">
+            <select id="materia" class="input redondeado" required>
+              <option value="" disabled selected>Seleccioná una materia</option>
+              <option value="infogen">Informatica General</option>
+              <option value="pwbeb">Programacion Web y Movil</option>
+              <option value="calculo">Calculo Elemental</option>
+            </select>
+            <span class="error-msg" id="error-materia"></span>
+          </div>
+          <div class="form-group">
+            <textarea
+              id="contenido"
+              class="input redondeado"
+              rows="10"
+              placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..."
+              required
+            ></textarea>
+            <span class="error-msg" id="error-contenido"></span>
+          </div>
+          <div class="form-group">
+            <input
+              id="tags"
+              type="text"
+              class="input redondeado"
+              placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)"
+              pattern="^(\s*|[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*)$"
+            />
+            <span class="error-msg" id="error-tags"></span>
+          </div>
+          <div class="form-group">
+            <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
+            <input id="archivo" type="file" class="input redondeado" required />
+            <span class="error-msg" id="error-archivo"></span>
+          </div>
+          <div class="form-group">
+            <label for="visibilidad">Visibilidad</label>
+            <select id="visibilidad" class="input redondeado" default="visible">
+              <option value="visible" selected>Visible</option>
+              <option value="privado">Privado</option>
+              <option value="oculto">Oculto</option>
+            </select>
+            <span class="error-msg" id="error-visibilidad"></span>
+          </div>
+          <button type="submit" class="publicar-btn" id="submit-btn">Publicar</button>
         </form>
-        
+
         <h2 class="tabla-titulo">Guía rápida de Markdown</h2>
         <table class="markdown-table">
-          <tr><th>Elemento</th><th>Markdown</th><th>Ejemplo</th></tr>
-          <tr><td>Negrita</td><td>**texto**</td><td><strong>texto</strong></td></tr>
-          <tr><td>Cursiva</td><td>*texto*</td><td><em>texto</em></td></tr>
-          <tr><td>Lista</td><td>- item</td><td>- ítem</td></tr>
-          <tr><td>Link</td><td>[texto](url)</td><td><a href="#">texto</a></td></tr>
-          <tr><td>Título</td><td># Título</td><td style="font-size: 2em;"><strong>Título</strong></td></tr>
-          <tr><td>Subtítulo</td><td># Subtítulo</td><td style="font-size: 1.5em;"><strong>Subtítulo</strong></td></tr>
-        </table>        
+          <tr>
+            <th>Elemento</th>
+            <th>Markdown</th>
+            <th>Ejemplo</th>
+          </tr>
+          <tr>
+            <td>Negrita</td>
+            <td>**texto**</td>
+            <td><strong>texto</strong></td>
+          </tr>
+          <tr>
+            <td>Cursiva</td>
+            <td>*texto*</td>
+            <td><em>texto</em></td>
+          </tr>
+          <tr>
+            <td>Lista</td>
+            <td>- item</td>
+            <td>- ítem</td>
+          </tr>
+          <tr>
+            <td>Link</td>
+            <td>[texto](url)</td>
+            <td><a href="#">texto</a></td>
+          </tr>
+          <tr>
+            <td>Título</td>
+            <td># Título</td>
+            <td style="font-size: 2em"><strong>Título</strong></td>
+          </tr>
+          <tr>
+            <td>Subtítulo</td>
+            <td># Subtítulo</td>
+            <td style="font-size: 1.5em"><strong>Subtítulo</strong></td>
+          </tr>
+        </table>
       </main>
 
       <footer>
