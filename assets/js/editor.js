@@ -63,6 +63,7 @@ function check(ID) {
   }
 }
 
+<<<<<<< Updated upstream
 //se ejecuta al abrir la pagina
 document.querySelector("#submit-btn").addEventListener("click", function (e) {
   console.log("submit");

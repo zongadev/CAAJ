@@ -19,23 +19,44 @@ function normalCambiarColorField(campo) {
   campo.style.background = COLOR_FONDO_NORMAL;
 }
 
-// Password validation logic
+<<<<<<< Updated upstream
+function check(ID){
+    campo = document.getElementById(ID)
+    if(campo.validity.valueMissing){
+        console.log("hola");
+        errorCambiarColorField(campo)
+    }
+    if(campo.validity.patternMismatch){
+        errorCambiarColorField(campo)
+    }else{
+        normalCambiarColorField(campo)
+=======
+function errorCambiarColorField(campo) {
+  campo.style.background = COLOR_FONDO_ERROR;
+}
+
+function normalCambiarColorField(campo) {
+  campo.style.background = COLOR_FONDO_NORMAL;
+}
+
+// Regex para validar contraseña
 function validarPassword(valor) {
   // Al menos 8 caracteres, una mayúscula, una minúscula y un número
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(valor);
 }
 
-// Add pattern validation for nombre, apellido, and mail in JS
+// Regex para validar nombre (Letras, espacios, apóstrofes y guiones)
 function validarNombre(valor) {
   // Solo letras y espacios
   return /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/.test(valor);
 }
 function validarApellido(valor) {
-  // Letras, espacios, apóstrofes y guiones
+  // Regex para validar apellido (Letras, espacios, apóstrofes y guiones)
   return /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:[ '\-][A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/.test(valor);
 }
 function validarMail(valor) {
-  // Mismo patrón que antes
+  // Regex para validar correo electrónico
+  // Debe contener al menos un carácter antes de la @, seguido de un dominio y una extensión
   return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(valor);
 }
 
@@ -63,19 +84,8 @@ function check(ID) {
         "Mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
     } else {
       normalCambiarColorField(campo);
+>>>>>>> Stashed changes
     }
-  } else {
-    normalCambiarColorField(campo);
-  }
-
-  if (errorMsg) {
-    setErrorMsg(ID, errorMsg);
-    campo.setCustomValidity(errorMsg);
-    campo.reportValidity();
-  } else {
-    clearErrorMsg(ID);
-    campo.setCustomValidity("");
-  }
 }
 
 //e es el evento al submitear
