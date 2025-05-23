@@ -63,10 +63,8 @@ function check(ID) {
   }
 }
 
-<<<<<<< Updated upstream
 //se ejecuta al abrir la pagina
 document.querySelector("#submit-btn").addEventListener("click", function (e) {
-  console.log("submit");
   //al apretar submit
   let campos = ["titulo", "contenido", "tags", "archivo", "materia", "visibilidad"]; //agregado visibilidad
   let valido = true;
