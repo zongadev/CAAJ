@@ -41,6 +41,15 @@ function check(ID) {
   } else if (ID === "archivo" && (!campo.files || campo.files.length === 0)) {
     errorMsg = "Debes adjuntar un archivo";
     errorCambiarColorField(campo);
+  } else if (ID === "tags" && campo.value.trim() !== "") {
+    // Validar que cada tag sea una sola palabra (sin espacios) y separadas por coma
+    let tagsArr = campo.value.split(",");
+    let invalid = tagsArr.some((tag) => /\s/.test(tag) || tag === "");
+    if (invalid) {
+      errorMsg =
+        "Cada etiqueta debe ser una sola palabra, separadas por comas y sin espacios";
+      errorCambiarColorField(campo);
+    }
   }
 
   if (errorMsg) {
@@ -49,7 +58,7 @@ function check(ID) {
     campo.reportValidity();
   } else {
     clearErrorMsg(ID);
-    normalCambiarColorField(campo)
+    normalCambiarColorField(campo);
     campo.setCustomValidity("");
   }
 }
