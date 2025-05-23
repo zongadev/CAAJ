@@ -54,25 +54,30 @@ function check(ID) {
   campo.setCustomValidity("");
 
   if (campo.validity.valueMissing) {
-    errorCambiarColorField(campo);
     errorMsg = "Este campo es obligatorio.";
   } else if (ID === "nom01" && !validarNombre(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Solo letras y espacios.";
   } else if (ID === "ape01" && !validarApellido(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Apellido inválido.";
   } else if (ID === "mail01" && !validarMail(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Correo inválido.";
   } else if (ID === "con01") {
     if (!validarPassword(campo.value)) {
-      errorCambiarColorField(campo);
       errorMsg =
         "Mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
-    } else {
-      normalCambiarColorField(campo);
     }
+  }
+
+  if (errorMsg) {
+    errorCambiarColorField(campo);
+    setErrorMsg(ID, errorMsg);
+    campo.setCustomValidity(errorMsg);
+    campo.reportValidity();
+  } else {
+    clearErrorMsg(ID);
+    campo.setCustomValidity("");
+    normalCambiarColorField(campo);
+  }
 }
 
 //e es el evento al submitear
@@ -86,7 +91,6 @@ document.querySelector("#submit-btn").addEventListener("click", function (e) {
     var campo = document.getElementById(id); // Obtiene el campo por ID
     check(id); // fuerza la validación y muestra mensajes
     if (campo.validity.valueMissing) {
-      d;
       valido = false;
     }
     if (id === "con01" && !validarPassword(campo.value)) {
