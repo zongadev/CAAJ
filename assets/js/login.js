@@ -1,12 +1,12 @@
 COLOR_FONDO_ERROR = "#ff6565";
 COLOR_FONDO_NORMAL = "#FFFFFF";
 
-// Helper: set error message under input
+// Pone el mensaje de error debajo del input
 function setErrorMsg(id, msg) {
   document.getElementById("error-" + id).textContent = msg;
 }
 
-// Helper: clear error message
+// Limpia el mensaje de error
 function clearErrorMsg(id) {
   document.getElementById("error-" + id).textContent = "";
 }
@@ -19,13 +19,13 @@ function normalCambiarColorField(campo) {
   campo.style.background = COLOR_FONDO_NORMAL;
 }
 
-// Email validation logic
+// Regex para validar email
 function validarEmail(valor) {
   // Mismo patrón que antes
   return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(valor);
 }
 
-// Password validation logic
+// Regex para validar nombre y apellido
 function validarPassword(valor) {
   // Al menos 8 caracteres, una mayúscula, una minúscula y un número
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(valor);
@@ -63,7 +63,7 @@ function check(ID) {
 }
 
 // Validación al enviar el formulario
-document.querySelector("#form").addEventListener("submit", function (e) {
+document.querySelector("#submit-btn").addEventListener("click", function (e) {
   let campos = ["mail", "con"];
   let valido = true;
   for (var i = 0; i < campos.length; i++) {

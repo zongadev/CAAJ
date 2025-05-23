@@ -49,14 +49,16 @@ function check(ID) {
     campo.reportValidity();
   } else {
     clearErrorMsg(ID);
+    normalCambiarColorField(campo)
     campo.setCustomValidity("");
   }
 }
 
 //se ejecuta al abrir la pagina
-document.querySelector(".editor-form").addEventListener("submit", function (e) {
+document.querySelector("#submit-btn").addEventListener("click", function (e) {
+  console.log("submit");
   //al apretar submit
-  let campos = ["titulo", "contenido", "tags", "archivo"]; //campos a validar
+  let campos = ["titulo", "contenido", "tags", "archivo", "materia", "visibilidad"]; //agregado visibilidad
   let valido = true;
   for (var i = 0; i < campos.length; i++) {
     var id = campos[i];
@@ -80,7 +82,7 @@ document.querySelector(".editor-form").addEventListener("submit", function (e) {
 });
 
 // Real-time validation (input/change)
-["titulo", "materia", "contenido", "tags", "archivo"].forEach(function (id) {
+["titulo", "materia", "contenido", "tags", "archivo", "visibilidad"].forEach(function (id) {
   var campo = document.getElementById(id);
   if (campo) {
     campo.addEventListener("input", function () {

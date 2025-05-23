@@ -79,7 +79,7 @@ function check(ID) {
 }
 
 //e es el evento al submitear
-document.querySelector("#regis-form").addEventListener("submit", function (e) {
+document.querySelector("#submit-btn").addEventListener("click", function (e) {
   // Al enviar el formulario
   let campos = ["nom01", "ape01", "mail01", "con01"]; // lista de IDs de los campos a validar
   let valido = true;

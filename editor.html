@@ -67,7 +67,16 @@
             <input id="archivo" type="file" class="input redondeado" required />
             <span class="error-msg" id="error-archivo"></span>
           </div>
-          <button type="submit" class="publicar-btn">Publicar</button>
+          <div class="form-group">
+            <label for="visibilidad">Visibilidad</label>
+            <select id="visibilidad" class="input redondeado" default="visible">
+              <option value="visible" selected>Visible</option>
+              <option value="privado">Privado</option>
+              <option value="oculto">Oculto</option>
+            </select>
+            <span class="error-msg" id="error-visibilidad"></span>
+          </div>
+          <button type="submit" class="publicar-btn" id="submit-btn">Publicar</button>
         </form>
 
         <h2 class="tabla-titulo">Guía rápida de Markdown</h2>

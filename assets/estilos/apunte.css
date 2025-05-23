@@ -76,6 +76,8 @@ h1 {
 .note-article {
   grid-area: article;
   text-align: left;
+  width: 100%;
+  /* max-width: 800px;  Puedes ajustar este valor si quieres limitar el ancho del artículo y sus comentarios */
 }
 
 .note-article h1 {
@@ -88,16 +90,15 @@ h1 {
   margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-  .content-grid {
-    grid-template-areas:
-      "article"
-      "index";
-    grid-template-columns: 1fr;
-  }
+.note-article .comment-box,
+.note-article .commentaries-section {
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none; /* Fuerza a ocupar todo el ancho del artículo */
 }
 
-/* Votación */
 .vote-section {
   display: flex;
   align-items: center;
@@ -127,16 +128,12 @@ h1 {
   font-weight: bold;
   color: #102b42;
 }
-
-/* No se si deberiamos de centrarlo pero 
-   no queda mal asi cuando lo ves pantalla completa.*/
 .comment-box{
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
+  padding-top: 20px;
   margin-bottom: 20px;
-  max-width: 500px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 0;
+  margin-right: 0;
+  background: none; /* Quita el fondo */
 }
 
 .comment-box label {
@@ -149,9 +146,23 @@ h1 {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  resize: vertical; /* Permite al usuario agrandar el textbox verticalmente */
+  resize: vertical; /* Deja agrandar el textbox verticalmente */
   font-size: 14px;
   margin-top: 10px;
+  background: #fff; /* normal background */
+  transition: background 0.2s;
+}
+
+/* Error message styling for comment box */
+.comment-box .error-msg {
+  color: #ff6565;
+  font-size: 0.95em;
+  margin-top: 2px;
+  margin-bottom: 0;
+  display: block;
+  min-height: 1.2em;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .comment-box button {
@@ -169,12 +180,12 @@ h1 {
 }
 
 .commentaries-section{
-  max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* max-width: 800px; */ /* Elimina esta línea */
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
 }
 
@@ -216,4 +227,18 @@ h1 {
   font-size: 14px;
     color: #555;
     line-height: 1.5;
+}
+
+/* Asegura que el footer ocupe todo el ancho y centra el contenido */
+footer {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px 0;
+  background: #f1f1f1;
+  text-align: center;
+  margin-top: 40px;
+}
+
+footer .socials {
+  margin-top: 10px;
 }
