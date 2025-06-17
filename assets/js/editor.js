@@ -45,13 +45,12 @@ function check(ID) {
     // Validar que cada tag sea una sola palabra (sin espacios) y separadas por coma
     let tagsArr = campo.value.split(",");
     let invalid = tagsArr.some((tag) => /\s/.test(tag) || tag === "");
-    if (invalid) {
+    if (invalid){
       errorMsg =
         "Cada etiqueta debe ser una sola palabra, separadas por comas y sin espacios";
       errorCambiarColorField(campo);
     }
   }
-
   if (errorMsg) {
     setErrorMsg(ID, errorMsg);
     campo.setCustomValidity(errorMsg);
