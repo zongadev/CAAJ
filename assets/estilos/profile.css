@@ -117,10 +117,14 @@ h1 {
 
 @media (max-width: 768px) {
   .content-grid {
-    grid-template-areas:
-      "content"
-      "sidebar";
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-sidebar {
+    order: 0;
+  }
+  .note-content {
+    order: 1;
   }
 }
 

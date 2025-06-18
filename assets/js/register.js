@@ -19,23 +19,32 @@ function normalCambiarColorField(campo) {
   campo.style.background = COLOR_FONDO_NORMAL;
 }
 
-// Password validation logic
+function errorCambiarColorField(campo) {
+  campo.style.background = COLOR_FONDO_ERROR;
+}
+
+function normalCambiarColorField(campo) {
+  campo.style.background = COLOR_FONDO_NORMAL;
+}
+
+// Regex para validar contraseña
 function validarPassword(valor) {
   // Al menos 8 caracteres, una mayúscula, una minúscula y un número
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(valor);
 }
 
-// Add pattern validation for nombre, apellido, and mail in JS
+// Regex para validar nombre (Letras, espacios, apóstrofes y guiones)
 function validarNombre(valor) {
   // Solo letras y espacios
   return /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/.test(valor);
 }
 function validarApellido(valor) {
-  // Letras, espacios, apóstrofes y guiones
+  // Regex para validar apellido (Letras, espacios, apóstrofes y guiones)
   return /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:[ '\-][A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$/.test(valor);
 }
 function validarMail(valor) {
-  // Mismo patrón que antes
+  // Regex para validar correo electrónico
+  // Debe contener al menos un carácter antes de la @, seguido de un dominio y una extensión
   return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(valor);
 }
 
@@ -45,36 +54,29 @@ function check(ID) {
   campo.setCustomValidity("");
 
   if (campo.validity.valueMissing) {
-    errorCambiarColorField(campo);
     errorMsg = "Este campo es obligatorio.";
   } else if (ID === "nom01" && !validarNombre(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Solo letras y espacios.";
   } else if (ID === "ape01" && !validarApellido(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Apellido inválido.";
   } else if (ID === "mail01" && !validarMail(campo.value)) {
-    errorCambiarColorField(campo);
     errorMsg = "Correo inválido.";
   } else if (ID === "con01") {
     if (!validarPassword(campo.value)) {
-      errorCambiarColorField(campo);
       errorMsg =
         "Mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
-    } else {
-      normalCambiarColorField(campo);
     }
-  } else {
-    normalCambiarColorField(campo);
   }
 
   if (errorMsg) {
+    errorCambiarColorField(campo);
     setErrorMsg(ID, errorMsg);
     campo.setCustomValidity(errorMsg);
     campo.reportValidity();
   } else {
     clearErrorMsg(ID);
     campo.setCustomValidity("");
+    normalCambiarColorField(campo);
   }
 }
 
@@ -89,7 +91,6 @@ document.querySelector("#submit-btn").addEventListener("click", function (e) {
     var campo = document.getElementById(id); // Obtiene el campo por ID
     check(id); // fuerza la validación y muestra mensajes
     if (campo.validity.valueMissing) {
-      d;
       valido = false;
     }
     if (id === "con01" && !validarPassword(campo.value)) {

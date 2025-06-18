@@ -106,3 +106,9 @@ main {
     background-color:rgba(20, 42, 63, 0.86);
     transform: scale(1.05);
     }
+
+    @media (max-width: 800px) {
+      .cards {
+        justify-content: center;
+      }
+    }

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 12:51 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.10
+-- Generation Time: Jun 03, 2025 at 01:39 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,7 +32,8 @@ CREATE TABLE `alumno` (
   `USU_ID` int(11) NOT NULL,
   `ALU_NOMBRE` varchar(50) NOT NULL,
   `ALU_APELLIDO` varchar(50) NOT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ALU_DNI` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -47,7 +48,21 @@ CREATE TABLE `apunte` (
   `APU_HEAD` varchar(100) DEFAULT NULL,
   `APU_CONT` text DEFAULT NULL,
   `APU_TAGS` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comentario`
+--
+
+CREATE TABLE `comentario` (
+  `COM_ID` int(11) NOT NULL,
+  `USU_ID` int(11) NOT NULL,
+  `APU_ID` int(11) NOT NULL,
+  `COM_CONTENIDO` text NOT NULL,
+  `COM_FECHA` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -58,7 +73,7 @@ CREATE TABLE `apunte` (
 CREATE TABLE `materia` (
   `MAT_ID` int(11) NOT NULL,
   `MAT_NOM` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -71,7 +86,21 @@ CREATE TABLE `media` (
   `APU_ID` int(11) NOT NULL,
   `MED_NOM` varchar(100) DEFAULT NULL,
   `MED_FILE` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reaccion`
+--
+
+CREATE TABLE `reaccion` (
+  `REA_ID` int(11) NOT NULL,
+  `USU_ID` int(11) NOT NULL,
+  `APU_ID` int(11) NOT NULL,
+  `REA_TYPE` varchar(10) NOT NULL CHECK (`REA_TYPE` in ('like','dislike')),
+  `REA_FECHA` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -82,7 +111,7 @@ CREATE TABLE `media` (
 CREATE TABLE `rol` (
   `ROL_ID` int(11) NOT NULL,
   `ROL_NOM` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -96,7 +125,7 @@ CREATE TABLE `usuario` (
   `USU_APODO` varchar(50) NOT NULL,
   `USU_EMAIL` varchar(100) NOT NULL,
   `USU_CONTRASENA` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -108,7 +137,6 @@ CREATE TABLE `usuario` (
 ALTER TABLE `alumno`
   ADD PRIMARY KEY (`ALU_ID`),
   ADD UNIQUE KEY `USU_ID` (`USU_ID`),
-  ADD UNIQUE KEY `ALU_LEGAJO` (`ALU_LEGAJO`),
   ADD UNIQUE KEY `ALU_DNI` (`ALU_DNI`);
 
 --
@@ -118,6 +146,14 @@ ALTER TABLE `apunte`
   ADD PRIMARY KEY (`APU_ID`),
   ADD KEY `USU_ID` (`USU_ID`),
   ADD KEY `MAT_ID` (`MAT_ID`);
+
+--
+-- Indexes for table `comentario`
+--
+ALTER TABLE `comentario`
+  ADD PRIMARY KEY (`COM_ID`),
+  ADD KEY `USU_ID` (`USU_ID`),
+  ADD KEY `APU_ID` (`APU_ID`);
 
 --
 -- Indexes for table `materia`
@@ -130,6 +166,14 @@ ALTER TABLE `materia`
 --
 ALTER TABLE `media`
   ADD PRIMARY KEY (`MED_ID`),
+  ADD KEY `APU_ID` (`APU_ID`);
+
+--
+-- Indexes for table `reaccion`
+--
+ALTER TABLE `reaccion`
+  ADD PRIMARY KEY (`REA_ID`),
+  ADD UNIQUE KEY `USU_ID` (`USU_ID`,`APU_ID`),
   ADD KEY `APU_ID` (`APU_ID`);
 
 --
@@ -146,6 +190,16 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`USU_ID`),
   ADD UNIQUE KEY `USU_EMAIL` (`USU_EMAIL`),
   ADD KEY `ROL_ID` (`ROL_ID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `comentario`
+--
+ALTER TABLE `comentario`
+  MODIFY `COM_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -165,10 +219,24 @@ ALTER TABLE `apunte`
   ADD CONSTRAINT `apunte_ibfk_2` FOREIGN KEY (`MAT_ID`) REFERENCES `materia` (`MAT_ID`);
 
 --
+-- Constraints for table `comentario`
+--
+ALTER TABLE `comentario`
+  ADD CONSTRAINT `comentario_ibfk_1` FOREIGN KEY (`USU_ID`) REFERENCES `usuario` (`USU_ID`),
+  ADD CONSTRAINT `comentario_ibfk_2` FOREIGN KEY (`APU_ID`) REFERENCES `apunte` (`APU_ID`);
+
+--
 -- Constraints for table `media`
 --
 ALTER TABLE `media`
   ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`APU_ID`) REFERENCES `apunte` (`APU_ID`);
+
+--
+-- Constraints for table `reaccion`
+--
+ALTER TABLE `reaccion`
+  ADD CONSTRAINT `reaccion_ibfk_1` FOREIGN KEY (`USU_ID`) REFERENCES `usuario` (`USU_ID`),
+  ADD CONSTRAINT `reaccion_ibfk_2` FOREIGN KEY (`APU_ID`) REFERENCES `apunte` (`APU_ID`);
 
 --
 -- Constraints for table `usuario`

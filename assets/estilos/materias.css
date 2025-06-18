@@ -42,22 +42,39 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .materias a {
   padding: 12px 24px;
-  width: 1000px;
+  width: 100%;
+  max-width: 1000px;
   background-color: #142a3f;
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: backround-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 .materias a:hover {
   background-color:rgba(20, 42, 63, 0.86);
   transform: scale(1.05);
+}
+
+@media (max-width: 700px) {
+  .materias {
+    max-width: 100%;
+    gap: 0.5rem;
+  }
+  .materias a {
+    font-size: 1.1rem;
+    padding: 10px 10px;
+    max-width: 100%;
+  }
 }

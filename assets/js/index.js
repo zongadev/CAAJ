@@ -23,13 +23,13 @@ document.addEventListener("DOMContentLoaded", () => { //DOM, Document Object mod
       item.toLowerCase().includes(query)
     );
 
-    if (filtered.length) {
+    if (filtered.length){
       filtered.forEach((item) => {
         const div = document.createElement("div");
         div.textContent = item;
         div.addEventListener("click", () => {
           searchInput.value = item;
-          suggestionsBox.style.display = "none";
+          suggestionsBox.style.display = "none"; //mover a clases
         });
         suggestionsBox.appendChild(div);
       });
