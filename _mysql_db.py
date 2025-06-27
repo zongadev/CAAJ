@@ -142,3 +142,8 @@ def deleteDB(configDB=None,sql="",param=None):
         res=ejecutarDB(mydb,sQuery=sql,param=param)
         cerrarBD(mydb)
     return res
+
+BASE={ "host":"localhost",
+        "user":"root",
+        "pass":"",
+        "dbname":"base"}
