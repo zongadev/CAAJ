@@ -76,84 +76,120 @@ def borrar_apunte_process():
     param = {}
     obtenerApunteXid(param, id_apunte)
     apunte = param.get('apunte', {})
+    url_redireccion = ""
+    mensaje_error = ""
+    
     if not id_usuario or not id_apunte:
-        return "No autorizado 22"
-    # Rol 3 = admin, rol 2 = profesor, pueden borrar cualquier apunte. Otros solo el suyo
-    if rol == 3 or rol == 2 or (apunte.get('usuario', {}).get('id') == id_usuario):
-        exito = borrarApunteDB(id_apunte)
-        if exito:
-            return redirect('/index')  # manda al index si sale todo bien
+        mensaje_error = "No autorizado 22"
+    else:
+        # Rol 3 = admin, rol 2 = profesor, pueden borrar cualquier apunte. Otros solo el suyo
+        if rol == 3 or rol == 2 or (apunte.get('usuario', {}).get('id') == id_usuario):
+            exito = borrarApunteDB(id_apunte)
+            if exito:
+                url_redireccion = '/index'
+            else:
+                mensaje_error = "Error al borrar"
         else:
-            return "Error al borrar"
-    return "No autorizado"
+            mensaje_error = "No autorizado"
+    
+    if url_redireccion:
+        resultado = redirect(url_redireccion)
+    else:
+        resultado = mensaje_error
+    return resultado
 
 # muestra la pagina para editar un apunte existente
 def editar_apunte_pagina(param, id_apunte):
     id_usuario = session.get('id_usuario')
     rol = session.get('rol')
+    url_redireccion = ""
     
     if not id_usuario or not id_apunte:
-        return redirect('/index')
+        url_redireccion = '/index'
+    else:
+        obtenerApunteXid(param, id_apunte)
+        apunte = param.get('apunte', {})
+        
+        # chequeamos que seas el dueño, profesor o admin para poder editar
+        # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
+        if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
+            param['error_msg'] = "No autorizado"
+        else:
+            obtenerMenuHead(param)
+            obtenerMaterias(param)
+            obtenerMediaXid(param, id_apunte)
+            param['editando'] = True
+            param['id_apunte'] = id_apunte
     
-    obtenerApunteXid(param, id_apunte)
-    apunte = param.get('apunte', {})
-    
-    # chequeamos que seas el dueño, profesor o admin para poder editar
-    # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
-    if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
-        return "No autorizado"
-    
-    obtenerMenuHead(param)
-    obtenerMaterias(param)
-    obtenerMediaXid(param, id_apunte)
-    param['editando'] = True
-    param['id_apunte'] = id_apunte
-    return render_template('nuevoapunte.html', param=param)
+    if url_redireccion:
+        resultado = redirect(url_redireccion)
+    else:
+        resultado = render_template('nuevoapunte.html', param=param)
+    return resultado
 
 # procesa la actualizacion de un apunte existente
 def actualizar_apunte_process(request, param):
     id_apunte = request.form.get('id_apunte')
     id_usuario = session.get('id_usuario')
     rol = session.get('rol')
+    url_redireccion = ""
+    mostrar_error = False
     
     if not id_usuario or not id_apunte:
-        return redirect('/index')
-    
-    # chequeamos permisos antes de hacer nada
-    obtenerApunteXid(param, id_apunte)
-    apunte = param.get('apunte', {})
-    
-    # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
-    if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
-        return "No autorizado"
-    
-    mirequest = {}
-    getRequest(mirequest)
-    
-    exito = actualizarApunte(id_apunte, mirequest)
-    
-    if exito:
-        # si hay archivos nuevos los subimos
-        if 'archivo[]' in request.files and any(f.filename for f in request.files.getlist('archivo[]')):
-            print(f"DEBUG: Procesando archivos para apunte {id_apunte}")
-            file_result = {}
-            upload_file(file_result)
-            print(f"DEBUG: file_result = {file_result}")
-            for archivo_info in file_result.get('archivos', []):
-                if archivo_info and not archivo_info.get('file_error'):
-                    print(f"DEBUG: Creando media - id_apunte={id_apunte}, nombre={archivo_info['file_name']}, uuid={archivo_info['file_name_new']}")
-                    result = crearMedia(id_apunte, archivo_info['file_name'], archivo_info['file_name_new'])
-                    print(f"DEBUG: crearMedia resultado = {result}")
-        
-        return redirect(f'/apunte?apunte={id_apunte}')
+        url_redireccion = '/index'
     else:
-        param['error_msg'] = "Error al actualizar el apunte"
-        obtenerMenuHead(param)
-        obtenerMaterias(param)
-        obtenerMediaXid(param, id_apunte)
-        param['editando'] = True
-        param['id_apunte'] = id_apunte
-        return render_template('nuevoapunte.html', param=param)
+        # chequeamos permisos antes de hacer nada
+        obtenerApunteXid(param, id_apunte)
+        apunte = param.get('apunte', {})
+        
+        # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
+        if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
+            param['error_msg'] = "No autorizado"
+            mostrar_error = True
+        else:
+            mirequest = {}
+            getRequest(mirequest)
+            
+            exito = actualizarApunte(id_apunte, mirequest)
+            
+            if exito:
+                # si hay archivos nuevos los subimos
+                hay_archivos = False
+                if 'archivo[]' in request.files:
+                    archivos_lista = request.files.getlist('archivo[]')
+                    i = 0
+                    while i < len(archivos_lista) and not hay_archivos:
+                        if archivos_lista[i].filename:
+                            hay_archivos = True
+                        i = i + 1
+                
+                if hay_archivos:
+                    print(f"DEBUG: Procesando archivos para apunte {id_apunte}")
+                    file_result = {}
+                    upload_file(file_result)
+                    print(f"DEBUG: file_result = {file_result}")
+                    for archivo_info in file_result.get('archivos', []):
+                        if archivo_info and not archivo_info.get('file_error'):
+                            print(f"DEBUG: Creando media - id_apunte={id_apunte}, nombre={archivo_info['file_name']}, uuid={archivo_info['file_name_new']}")
+                            result = crearMedia(id_apunte, archivo_info['file_name'], archivo_info['file_name_new'])
+                            print(f"DEBUG: crearMedia resultado = {result}")
+                
+                url_redireccion = f'/apunte?apunte={id_apunte}'
+            else:
+                param['error_msg'] = "Error al actualizar el apunte"
+                mostrar_error = True
+    
+    if url_redireccion:
+        resultado = redirect(url_redireccion)
+    else:
+        if mostrar_error:
+            obtenerMenuHead(param)
+            obtenerMaterias(param)
+            obtenerMediaXid(param, id_apunte)
+            param['editando'] = True
+            param['id_apunte'] = id_apunte
+        resultado = render_template('nuevoapunte.html', param=param)
+    return resultado
 
 # elimina un archivo de un apunte (chequea permisos)
 def eliminar_archivo_process(request, param):
@@ -162,24 +198,35 @@ def eliminar_archivo_process(request, param):
     id_apunte = data.get('id_apunte')
     id_usuario = session.get('id_usuario')
     rol = session.get('rol')
+    resultado = ""
+    codigo_estado = 200
     
     if not id_usuario or not nombre_archivo or not id_apunte:
-        return jsonify({'success': False, 'message': 'Datos incompletos'}), 400
-    
-    # verificamos que puedas borrar archivos de este apunte
-    obtenerApunteXid(param, id_apunte)
-    apunte = param.get('apunte', {})
-    
-    if rol != 3 and apunte.get('usuario', {}).get('id') != id_usuario:
-        return jsonify({'success': False, 'message': 'No autorizado'}), 403
-    
-    # borramos el archivo del servidor y la BD
-    exito = eliminarArchivoApunte(id_apunte, nombre_archivo)
-    
-    if exito:
-        return jsonify({'success': True, 'message': 'Archivo eliminado'})
+        resultado = jsonify({'success': False, 'message': 'Datos incompletos'})
+        codigo_estado = 400
     else:
-        return jsonify({'success': False, 'message': 'Error al eliminar archivo'}), 500
+        # verificamos que puedas borrar archivos de este apunte
+        obtenerApunteXid(param, id_apunte)
+        apunte = param.get('apunte', {})
+        
+        if rol != 3 and apunte.get('usuario', {}).get('id') != id_usuario:
+            resultado = jsonify({'success': False, 'message': 'No autorizado'})
+            codigo_estado = 403
+        else:
+            # borramos el archivo del servidor y la BD
+            exito = eliminarArchivoApunte(id_apunte, nombre_archivo)
+            
+            if exito:
+                resultado = jsonify({'success': True, 'message': 'Archivo eliminado'})
+                codigo_estado = 200
+            else:
+                resultado = jsonify({'success': False, 'message': 'Error al eliminar archivo'})
+                codigo_estado = 500
+    
+    if codigo_estado == 200:
+        return resultado
+    else:
+        return resultado, codigo_estado
 
 # trae todos los comentarios de un apunte
 def obtenerComentarios(param,apunteid):
@@ -194,15 +241,16 @@ def publicar_comentario_process(param, request):
     comentario = request.form.get('comentario', '').strip()
     id_usuario = session.get('id_usuario')
     apodo = session.get('username', 'Anónimo')
+    resultado = ""
 
     if not id_usuario or not comentario or not id_apunte:
-        return '<span class="error-msg">Datos incompletos</span>'
-
-    id_comentario = crearComentario(id_apunte, id_usuario, comentario)
-    if id_comentario:
-        fecha = datetime.now().strftime('%Y-%m-%d %H:%M')
-        # armamos el HTML del comentario con botones de editar/borrar si corresponde
-        edit_delete_btns = f'''
+        resultado = '<span class="error-msg">Datos incompletos</span>'
+    else:
+        id_comentario = crearComentario(id_apunte, id_usuario, comentario)
+        if id_comentario:
+            fecha = datetime.now().strftime('%Y-%m-%d %H:%M')
+            # armamos el HTML del comentario con botones de editar/borrar si corresponde
+            edit_delete_btns = f'''
             <button class="edit-comment-btn" onclick="editarComentario({id_comentario})" title="Editar comentario">
               ✏️
             </button>
@@ -213,8 +261,8 @@ def publicar_comentario_process(param, request):
               </button>
             </form>
         ''' if session.get('id_usuario') == id_usuario or session.get('rol') == 3 else ''
-        
-        return f'''
+            
+            resultado = f'''
         <div class="comment" data-comment-id="{id_comentario}">
           <div class="author">
             <a href="/profile?id_usuario={id_usuario}">
@@ -235,25 +283,37 @@ def publicar_comentario_process(param, request):
           </div>
         </div>
         '''
-    else:
-        return '<span class="error-msg">Error al guardar el comentario</span>'
+        else:
+            resultado = '<span class="error-msg">Error al guardar el comentario</span>'
+    return resultado
     
 # procesa un voto (like o dislike) en un apunte    
 def votar_apunte_process(data):
     id_apunte = data.get('id_apunte')
     tipo = data.get('tipo')  # puede ser 'like' o 'dislike'
     id_usuario = session.get('id_usuario')
+    resultado = ""
+    codigo_estado = 200
     
     # Validaciones específicas
     if not id_usuario:
-        return jsonify({'success': False, 'msg': 'Debes iniciar sesión para votar', 'requiresLogin': True}), 401
-    if not id_apunte:
-        return jsonify({'success': False, 'msg': 'ID de apunte inválido'}), 400
-    if tipo not in ['like', 'dislike']:
-        return jsonify({'success': False, 'msg': 'Tipo de voto inválido'}), 400
+        resultado = jsonify({'success': False, 'msg': 'Debes iniciar sesión para votar', 'requiresLogin': True})
+        codigo_estado = 401
+    elif not id_apunte:
+        resultado = jsonify({'success': False, 'msg': 'ID de apunte inválido'})
+        codigo_estado = 400
+    elif tipo not in ['like', 'dislike']:
+        resultado = jsonify({'success': False, 'msg': 'Tipo de voto inválido'})
+        codigo_estado = 400
+    else:
+        exito, likes, dislikes, voto_actual = votar_apunte_db(id_apunte, id_usuario, tipo)
+        resultado = jsonify({'success': exito, 'likes': likes, 'dislikes': dislikes, 'voto_actual': voto_actual})
+        codigo_estado = 200
     
-    exito, likes, dislikes, voto_actual = votar_apunte_db(id_apunte, id_usuario, tipo)
-    return jsonify({'success': exito, 'likes': likes, 'dislikes': dislikes, 'voto_actual': voto_actual})
+    if codigo_estado == 200:
+        return resultado
+    else:
+        return resultado, codigo_estado
 
 
 def index_pagina(param):
@@ -322,14 +382,21 @@ def profile_pagina(param,id_usuario):
 # publica un nuevo apunte y maneja la subida de archivos
 def publicar_process(request, param):
     id_apunte = cargarApunte(request)
+    url_redireccion = ""
+    
     if id_apunte:
         # si sale todo bien manda al apunte recien creado
-        return redirect(f'/apunte?apunte={id_apunte}')
+        url_redireccion = f'/apunte?apunte={id_apunte}'
     else:
         param['error_msg'] = "Error al crear el apunte"
         obtenerMenuHead(param)
         obtenerMaterias(param)
-        return render_template('nuevoapunte.html', param=param)
+    
+    if url_redireccion:
+        resultado = redirect(url_redireccion)
+    else:
+        resultado = render_template('nuevoapunte.html', param=param)
+    return resultado
 
 # crea un apunte nuevo y sube los archivos adjuntos
 def cargarApunte(request):
@@ -338,7 +405,17 @@ def cargarApunte(request):
     getRequest(mirequest)
     id_apunte = crearApunte(mirequest, session['id_usuario'])
     if id_apunte is not None:
-        if 'archivo[]' in request.files and any(f.filename for f in request.files.getlist('archivo[]')): # chequea si realmente hay archivos
+        # chequea si realmente hay archivos
+        hay_archivos = False
+        if 'archivo[]' in request.files:
+            archivos_lista = request.files.getlist('archivo[]')
+            i = 0
+            while i < len(archivos_lista) and not hay_archivos:
+                if archivos_lista[i].filename:
+                    hay_archivos = True
+                i = i + 1
+        
+        if hay_archivos:
             file_result = {}
             upload_file(file_result)
             for archivo_info in file_result.get('archivos', []):
@@ -518,15 +595,26 @@ def borrar_comentario_process():
     rol = session.get('rol')
     # traemos el comentario para verificar quien es el dueño
     comentario = obtenerComentarioPorId(id_comentario)
+    url_redireccion = ""
+    mensaje_error = ""
+    
     if not id_usuario or not id_comentario:
-        return "No autorizado"
-    if rol == 3 or (comentario and comentario['id_usuario'] == id_usuario):
-        exito = borrarComentarioDB(id_comentario)
-        if exito:
-            return redirect(request.referrer or '/apunte?apunte=' + str(comentario['id_apunte']))
+        mensaje_error = "No autorizado"
+    else:
+        if rol == 3 or (comentario and comentario['id_usuario'] == id_usuario):
+            exito = borrarComentarioDB(id_comentario)
+            if exito:
+                url_redireccion = request.referrer or '/apunte?apunte=' + str(comentario['id_apunte'])
+            else:
+                mensaje_error = "Error al borrar"
         else:
-            return "Error al borrar"
-    return "No autorizado"
+            mensaje_error = "No autorizado"
+    
+    if url_redireccion:
+        resultado = redirect(url_redireccion)
+    else:
+        resultado = mensaje_error
+    return resultado
 
 # actualiza el contenido de un comentario existente
 def actualizar_comentario_process():
@@ -535,21 +623,23 @@ def actualizar_comentario_process():
     contenido = data.get('contenido', '').strip()
     id_usuario = session.get('id_usuario')
     rol = session.get('rol')
+    resultado = ""
     
     if not id_usuario or not id_comentario or not contenido:
-        return jsonify({'success': False, 'msg': 'Datos incompletos'})
-    
-    # verificamos que puedas editar este comentario
-    comentario = obtenerComentarioPorId(id_comentario)
-    if not comentario:
-        return jsonify({'success': False, 'msg': 'Comentario no encontrado'})
-    
-    if rol != 3 and comentario['id_usuario'] != id_usuario:
-        return jsonify({'success': False, 'msg': 'No autorizado'})
-    
-    exito = actualizarComentario(id_comentario, contenido)
-    
-    if exito:
-        return jsonify({'success': True})
+        resultado = jsonify({'success': False, 'msg': 'Datos incompletos'})
     else:
-        return jsonify({'success': False, 'msg': 'Error al actualizar el comentario'})
+        # verificamos que puedas editar este comentario
+        comentario = obtenerComentarioPorId(id_comentario)
+        if not comentario:
+            resultado = jsonify({'success': False, 'msg': 'Comentario no encontrado'})
+        else:
+            if rol != 3 and comentario['id_usuario'] != id_usuario:
+                resultado = jsonify({'success': False, 'msg': 'No autorizado'})
+            else:
+                exito = actualizarComentario(id_comentario, contenido)
+                
+                if exito:
+                    resultado = jsonify({'success': True})
+                else:
+                    resultado = jsonify({'success': False, 'msg': 'Error al actualizar el comentario'})
+    return resultado

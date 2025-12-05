@@ -47,13 +47,3 @@ if (commentField) {
   commentField.addEventListener("input", validarComentario);
   commentField.addEventListener("blur", validarComentario);
 }
-
-// Validación al enviar
-const btn = document.getElementById("publicar-comentario-btn");
-if (btn) {
-  btn.addEventListener("click", function (e) {
-    if (!validarComentario()) {
-      e.preventDefault();
-    }
-  });
-}
