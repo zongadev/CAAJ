@@ -55,6 +55,22 @@ def route(app):
     @app.route('/borrar_apunte', methods = ['POST'])
     def borrar_apunte():
         return borrar_apunte_process()
+    
+    @app.route('/editar_apunte')
+    def editar_apunte():
+        param = {}
+        id_apunte = request.args.get('id')
+        return editar_apunte_pagina(param, id_apunte)
+    
+    @app.route('/actualizar_apunte', methods=['POST'])
+    def actualizar_apunte():
+        param = {}
+        return actualizar_apunte_process(request, param)
+    
+    @app.route('/eliminar_archivo', methods=['POST'])
+    def eliminar_archivo():
+        param = {}
+        return eliminar_archivo_process(request, param)
         
     @app.route('/publicar_comentario', methods =['POST'])
     def publicar_cometario():
@@ -65,6 +81,10 @@ def route(app):
     def borrar_comentario():
         return borrar_comentario_process()
     
+    @app.route('/actualizar_comentario', methods=['POST'])
+    def actualizar_comentario():
+        return actualizar_comentario_process()
+    
     @app.route('/materias')
     def materias():
         param = {}
@@ -73,8 +93,9 @@ def route(app):
     @app.route('/buscador')
     def buscador():
         materia_id = request.args.get('materia') #este request es un get, flask utiliza por defecto get si no le aclaras
+        query = request.args.get('q', '').strip()
         param={}
-        return listaapuntes_pagina(param,materia_id)
+        return listaapuntes_pagina(param, materia_id, query)
     
     @app.route('/apunte')
     def apunte():
@@ -91,6 +112,12 @@ def route(app):
     def api_materias():
         param ={}
         return materiasJSON(param)
+    
+    @app.route('/api/buscar')
+    def api_buscar():
+        query = request.args.get('q', '')
+        param = {}
+        return buscarJSON(param, query)
     
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):

@@ -15,28 +15,53 @@
         <div class="nav-left">
           <a class="nav-logo" href="/index"></a>
           {% if param.menuHead.mnub01 %}
-            <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
-          {% endif %}
-          {% if param.menuHead.mnub04 %}
-            <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+          <a
+            class="{{ param.menuHead.mnub01.class }}"
+            href="{{ param.menuHead.mnub01.href }}"
+            >{{ param.menuHead.mnub01.content }}</a
+          >
+          {% endif %} {% if param.menuHead.mnub04 %}
+          <a
+            class="{{ param.menuHead.mnub04.class }}"
+            href="{{ param.menuHead.mnub04.href }}"
+            >{{ param.menuHead.mnub04.content }}</a
+          >
           {% endif %}
         </div>
         <div class="nav-right">
           {% if param.menuHead.mnub02 %}
-            <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
-          {% endif %}
-          {% if param.menuHead.mnub03 %}
-            <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+          <a
+            class="{{ param.menuHead.mnub02.class }}"
+            href="{{ param.menuHead.mnub02.href }}"
+            >{{ param.menuHead.mnub02.content }}</a
+          >
+          {% endif %} {% if param.menuHead.mnub03 %}
+          <a
+            class="{{ param.menuHead.mnub03.class }}"
+            href="{{ param.menuHead.mnub03.href }}"
+            >{{ param.menuHead.mnub03.content }}</a
+          >
           {% endif %}
         </div>
       </header>
 
       <main class="main-content">
         {% if param.success_msg %}
-          <div class="alert-success">{{ param.success_msg }}</div>
+        <div class="alert-success">{{ param.success_msg }}</div>
         {% endif %}
-        <h1 class="titulo">Nueva publicacion</h1>
-        <form class="editor-form" action="/publicar" method="POST" enctype="multipart/form-data">
+        {% if param.error_msg %}
+        <div class="alert-error">{{ param.error_msg }}</div>
+        {% endif %}
+        <h1 class="titulo">{% if param.editando %}Editar publicación{% else %}Nueva publicación{% endif %}</h1>
+        <form
+          class="editor-form"
+          action="{% if param.editando %}/actualizar_apunte{% else %}/publicar{% endif %}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% if param.editando %}
+          <input type="hidden" name="id_apunte" value="{{ param.id_apunte }}" />
+          {% endif %}
           <div class="form-group">
             <input
               id="titulo"
@@ -44,15 +69,21 @@
               type="text"
               placeholder="Título de la publicación"
               class="input redondeado"
+              value="{% if param.apunte %}{{ param.apunte.titulo }}{% endif %}"
               required
             />
             <span class="error-msg" id="error-titulo"></span>
           </div>
           <div class="form-group">
-            <select id="materia" name="materia" class="input redondeado" required>
-              <option value="" disabled selected>Seleccioná una materia</option>
+            <select
+              id="materia"
+              name="materia"
+              class="input redondeado"
+              required
+            >
+              <option value="" disabled {% if not param.apunte %}selected{% endif %}>Seleccioná una materia</option>
               {% for materia in param.materias %}
-                <option value="{{ materia.uuid }}">{{ materia.nombre }}</option>
+              <option value="{{ materia.id }}" {% if param.apunte and param.apunte.id_materia == materia.id %}selected{% endif %}>{{ materia.nombre }}</option>
               {% endfor %}
             </select>
             <span class="error-msg" id="error-materia"></span>
@@ -65,7 +96,7 @@
               rows="10"
               placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..."
               required
-            ></textarea>
+            >{% if param.apunte %}{{ param.apunte.contenido }}{% endif %}</textarea>
             <span class="error-msg" id="error-contenido"></span>
           </div>
           <div class="form-group">
@@ -76,15 +107,41 @@
               class="input redondeado"
               placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)"
               pattern="^(\s*|[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*)$"
+              value="{% if param.apunte %}{{ param.apunte.tags }}{% endif %}"
             />
             <span class="error-msg" id="error-tags"></span>
           </div>
+          {% if param.editando %}
           <div class="form-group">
-            <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
-            <input id="archivo" name="archivo[]" type="file" class="input redondeado" multiple/>
+            <label class="archivo-label">Archivos adjuntos actuales:</label>
+            <div id="archivos-actuales" class="archivos-list">
+              {% if param.media and param.media|length > 0 %}
+                {% for archivo in param.media %}
+                <div class="archivo-item" data-archivo="{{ archivo.nombre }}">
+                  <span class="archivo-nombre">{{ archivo.nombre }}</span>
+                  <button type="button" class="delete-file-btn" onclick="eliminarArchivo('{{ archivo.nombre }}', {{ param.id_apunte }})">🗑️ Eliminar</button>
+                </div>
+                {% endfor %}
+              {% else %}
+                <p class="no-archivos">No hay archivos adjuntos</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+          <div class="form-group">
+            <label class="archivo-label" for="archivo">{% if param.editando %}Agregar nuevos archivos:{% else %}Adjuntar archivo:{% endif %}</label>
+            <input
+              id="archivo"
+              name="archivo[]"
+              type="file"
+              class="input redondeado"
+              multiple
+            />
             <span class="error-msg" id="error-archivo"></span>
           </div>
-          <button type="submit" class="publicar-btn" id="submit-btn">Publicar</button>
+          <button type="submit" class="publicar-btn" id="submit-btn">
+            {% if param.editando %}Actualizar{% else %}Publicar{% endif %}
+          </button>
         </form>
 
         <h2 class="tabla-titulo">Guía rápida de Markdown</h2>

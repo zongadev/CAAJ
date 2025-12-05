@@ -15,18 +15,32 @@
         <div class="nav-left">
           <a class="nav-logo" href="/index"></a>
           {% if param.menuHead.mnub01 %}
-            <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
-          {% endif %}
-          {% if param.menuHead.mnub04 %}
-            <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+          <a
+            class="{{ param.menuHead.mnub01.class }}"
+            href="{{ param.menuHead.mnub01.href }}"
+            >{{ param.menuHead.mnub01.content }}</a
+          >
+          {% endif %} {% if param.menuHead.mnub04 %}
+          <a
+            class="{{ param.menuHead.mnub04.class }}"
+            href="{{ param.menuHead.mnub04.href }}"
+            >{{ param.menuHead.mnub04.content }}</a
+          >
           {% endif %}
         </div>
         <div class="nav-right">
           {% if param.menuHead.mnub02 %}
-            <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
-          {% endif %}
-          {% if param.menuHead.mnub03 %}
-            <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+          <a
+            class="{{ param.menuHead.mnub02.class }}"
+            href="{{ param.menuHead.mnub02.href }}"
+            >{{ param.menuHead.mnub02.content }}</a
+          >
+          {% endif %} {% if param.menuHead.mnub03 %}
+          <a
+            class="{{ param.menuHead.mnub03.class }}"
+            href="{{ param.menuHead.mnub03.href }}"
+            >{{ param.menuHead.mnub03.content }}</a
+          >
           {% endif %}
         </div>
       </header>
@@ -34,15 +48,13 @@
       <main class="main-content">
         <h1 class="titulo">Materias</h1>
         <div class="materias">
-          {% if param.materias and param.materias|length > 0 %}
-            {% for materia in param.materias %}
-              <a href="/buscador?materia={{ materia.uuid }}">{{ materia.nombre }}</a>
-            {% endfor %}
-          {% else %}
-            <p>No hay materias disponibles.</p>
+          {% if param.materias and param.materias|length > 0 %} {% for materia
+          in param.materias %}
+          <a href="/buscador?materia={{ materia.id }}">{{ materia.nombre }}</a>
+          {% endfor %} {% else %}
+          <p>No hay materias disponibles.</p>
           {% endif %}
         </div>
-
       </main>
 
       <footer>

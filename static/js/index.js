@@ -1,63 +1,93 @@
 document.addEventListener("DOMContentLoaded", () => {
   let suggestions = [];
-  fetch("/api/materias") ///ESTO ES EL AJAX, EL FETCH ES ASINCRONIC
-    .then(response => response.json())
-    .then(data => {
-      suggestions = data;
-    });
 
   const searchInput = document.getElementById("search");
   const suggestionsBox = document.getElementById("suggestions");
 
+  // Función para normalizar texto (quitar tildes)
+  function normalizar(texto) {
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  // Buscar en tiempo real mientras se escribe
+  let timeoutId;
   searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
+    const query = searchInput.value.trim();
     suggestionsBox.innerHTML = "";
 
-    if (!query) {
+    if (!query || query.length < 2) {
       suggestionsBox.style.display = "none";
       return;
     }
 
-    // Si suggestions es una lista de objetos con 'nombre'
-    const filtered = suggestions.filter((item) =>
-      (item.nombre || item).toLowerCase().includes(query)
-    );
+    // Debounce: esperar 300ms antes de buscar
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      fetch(`/api/buscar?q=${encodeURIComponent(query)}`)
+        .then((response) => response.json())
+        .then((data) => {
+          suggestions = data;
 
-    if (filtered.length) {
-      filtered.forEach((item) => {
-        const nombre = item.nombre || item;
-        const div = document.createElement("div");
-        div.textContent = nombre;
-        div.addEventListener("click", () => {
-          searchInput.value = nombre;
-          suggestionsBox.style.display = "none";
+          if (suggestions.length > 0) {
+            suggestions.forEach((item) => {
+              const div = document.createElement("div");
+
+              if (item.tipo === "materia") {
+                div.innerHTML = `<strong>📚 ${item.titulo}</strong>`;
+                div.dataset.tipo = "materia";
+                div.dataset.id = item.materia_id;
+              } else {
+                div.innerHTML = `<strong>📄 ${item.titulo}</strong><br><small>${
+                  item.contenido ? item.contenido + "..." : ""
+                }</small>`;
+                div.dataset.tipo = "apunte";
+                div.dataset.id = item.id;
+              }
+
+              div.addEventListener("click", () => {
+                if (item.tipo === "materia") {
+                  window.location.href = `/buscador?materia=${item.materia_id}`;
+                } else {
+                  window.location.href = `/apunte?apunte=${item.id}`;
+                }
+              });
+              suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = "flex";
+          } else {
+            suggestionsBox.style.display = "none";
+          }
         });
-        suggestionsBox.appendChild(div);
-      });
-      suggestionsBox.style.display = "flex";
-    } else {
-      suggestionsBox.style.display = "none";
-    }
+    }, 300);
   });
-  
+
   const searchBtn = document.getElementById("search-btn");
   if (searchBtn) {
     searchBtn.addEventListener("click", () => {
-      const query = searchInput.value.trim().toLowerCase();
-      if (!query) return;
+      const query = searchInput.value.trim();
+      if (!query || query.length < 2) return;
 
-      // Busca la materia seleccionada en suggestions
-      const materia = suggestions.find(item =>
-        (item.nombre || item).toLowerCase() === query
-      );
-
-      if (materia) {
-        // Redirige usando el uuid o id según tu sistema
-        window.location.href = `/buscador?materia=${materia.uuid || materia.id}`;
+      // Si hay sugerencias, usar la primera
+      if (suggestions.length > 0) {
+        const item = suggestions[0];
+        if (item.tipo === "materia") {
+          window.location.href = `/buscador?materia=${item.materia_id}`;
+        } else {
+          window.location.href = `/apunte?apunte=${item.id}`;
+        }
       } else {
-        alert("Materia no encontrada.");
+        alert("No se encontraron resultados.");
       }
     });
   }
 
+  // Permitir buscar con Enter
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      searchBtn.click();
+    }
+  });
 });

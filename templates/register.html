@@ -13,34 +13,47 @@
 </head>
 <body>
     <div class="registerfondo">
+        <div class="form-logo"></div>
         <h1>Registrarse</h1>
         {% if param.error_msg_regis %}
             <div class="error-msg-regis">{{ param.error_msg_regis }}</div>
         {% endif %}
-    <form id="regis-form" action="/registrando" method="POST" > 
-        <div class="form-group">
-            <label for="apodo01">Apodo</label>
-            <input type="text" name="apodo" id="apodo01" required onblur="check(this.id)"
-                   value="{{ param.form_data.apodo if param.form_data and param.form_data.apodo else '' }}">
-            <span class="error-msg" id="error-apodo01"></span>
+    <form id="regis-form" action="/registrando" method="POST" >
+        <div class="form-columns">
+            <div class="form-column">
+                <div class="form-group">
+                    <label for="apodo01">Apodo</label>
+                    <input type="text" name="apodo" id="apodo01" required onblur="check(this.id)"
+                           value="{{ param.form_data.apodo if param.form_data and param.form_data.apodo else '' }}">
+                    <span class="error-msg" id="error-apodo01"></span>
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="form-group">
+                    <label for="dni01">DNI</label>
+                    <input type="text" name="dni" id="dni01" required onblur="check(this.id)"
+                           value="{{ param.form_data.dni if param.form_data and param.form_data.dni else '' }}">
+                    <span class="error-msg" id="error-dni01"></span>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="nom01">Nombre</label>
-            <input type="text" name="nombre" id="nom01" required onblur="check(this.id)"
-                   value="{{ param.form_data.nombre if param.form_data and param.form_data.nombre else '' }}">
-            <span class="error-msg" id="error-nom01"></span>
-        </div>
-        <div class="form-group">
-            <label for="ape01">Apellido</label>
-            <input type="text" name="apellido" id="ape01" required onblur="check(this.id)"
-                   value="{{ param.form_data.apellido if param.form_data and param.form_data.apellido else '' }}">
-            <span class="error-msg" id="error-ape01"></span>
-        </div>
-        <div class="form-group">
-            <label for="dni01">DNI</label>
-            <input type="text" name="dni" id="dni01" required onblur="check(this.id)"
-                   value="{{ param.form_data.dni if param.form_data and param.form_data.dni else '' }}">
-            <span class="error-msg" id="error-dni01"></span>
+        <div class="form-columns">
+            <div class="form-column">
+                <div class="form-group">
+                    <label for="nom01">Nombre</label>
+                    <input type="text" name="nombre" id="nom01" required onblur="check(this.id)"
+                           value="{{ param.form_data.nombre if param.form_data and param.form_data.nombre else '' }}">
+                    <span class="error-msg" id="error-nom01"></span>
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="form-group">
+                    <label for="ape01">Apellido</label>
+                    <input type="text" name="apellido" id="ape01" required onblur="check(this.id)"
+                           value="{{ param.form_data.apellido if param.form_data and param.form_data.apellido else '' }}">
+                    <span class="error-msg" id="error-ape01"></span>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <label for="mail01">Mail</label>
@@ -55,9 +68,7 @@
             <span class="error-msg" id="error-con01"></span>
         </div>
         <div class="form-footer">
-            <input type="submit" value="Enviar" id="submit-btn">
-            <input type="reset" value="Resetear">
-            <br>
+            <input type="submit" value="Crear cuenta" id="submit-btn">
             <div class="links">
                 <a href="login">Iniciar sesión</a>
                 <a href="index">Volver</a>

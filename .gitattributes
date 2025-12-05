@@ -1,2 +1,14 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Asegurar que los archivos SQL siempre usen UTF-8
+*.sql text eol=lf working-tree-encoding=UTF-8
+
+# Archivos Python
+*.py text eol=lf
+
+# Archivos de configuración
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf

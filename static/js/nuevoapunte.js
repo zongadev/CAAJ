@@ -1,6 +1,51 @@
 COLOR_FONDO_ERROR = "#ff6565";
 COLOR_FONDO_NORMAL = "#FFFFFF";
 
+function eliminarArchivo(nombreArchivo, idApunte) {
+  if (!confirm(`¿Eliminar el archivo "${nombreArchivo}"?`)) {
+    return;
+  }
+
+  fetch("/eliminar_archivo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      nombre_archivo: nombreArchivo,
+      id_apunte: idApunte,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // Eliminar visualmente el elemento
+        const archivoItem = document.querySelector(
+          `.archivo-item[data-archivo="${nombreArchivo}"]`
+        );
+        if (archivoItem) {
+          archivoItem.remove();
+        }
+
+        // Verificar si quedan archivos
+        const archivosList = document.getElementById("archivos-actuales");
+        if (
+          archivosList &&
+          archivosList.querySelectorAll(".archivo-item").length === 0
+        ) {
+          archivosList.innerHTML =
+            '<p class="no-archivos">No hay archivos adjuntos</p>';
+        }
+      } else {
+        alert(data.msg || "Error al eliminar el archivo");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Error al eliminar el archivo");
+    });
+}
+
 function customValidez(campo, mensaje) {
   // Cambia el mensaje de error
   campo.setCustomValidity(mensaje);
@@ -42,7 +87,7 @@ function check(ID) {
     // Validar que cada tag sea una sola palabra (sin espacios) y separadas por coma
     let tagsArr = campo.value.split(",");
     let invalid = tagsArr.some((tag) => /\s/.test(tag) || tag === "");
-    if (invalid){
+    if (invalid) {
       errorMsg =
         "Cada etiqueta debe ser una sola palabra, separadas por comas y sin espacios";
       errorCambiarColorField(campo);
@@ -61,7 +106,14 @@ function check(ID) {
 //se ejecuta al abrir la pagina
 document.querySelector("#submit-btn").addEventListener("click", function (e) {
   //al apretar submit
-  let campos = ["titulo", "contenido", "tags", "archivo", "materia", "visibilidad"]; //agregado visibilidad
+  let campos = [
+    "titulo",
+    "contenido",
+    "tags",
+    "archivo",
+    "materia",
+    "visibilidad",
+  ]; //agregado visibilidad
   let valido = true;
   for (var i = 0; i < campos.length; i++) {
     var id = campos[i];
@@ -75,33 +127,30 @@ document.querySelector("#submit-btn").addEventListener("click", function (e) {
   if (!valido) {
     // Si el campo no es valido, se bloquea el envio
     e.preventDefault(); // Bloquea el envio del formulario
-  } else {
-    // Mostrar el HTML convertido y loguear solo en submit
-    e.preventDefault();
-    var markdown = document.getElementById("contenido").value;
-    var html = markdownToHtml(markdown);
-    console.log(html);
   }
+  // El formulario se envía con el markdown tal cual
 });
 
 // Validar cambios en los inputs en tiempo real
-["titulo", "materia", "contenido", "tags", "archivo", "visibilidad"].forEach(function (id) {
-  var campo = document.getElementById(id);
-  if (campo) {
-    campo.addEventListener("input", function () {
-      check(id);
-    });
-    campo.addEventListener("blur", function () {
-      check(id);
-    });
-    // For file and select, also listen to change
-    if (campo.type === "file" || campo.tagName === "SELECT") {
-      campo.addEventListener("change", function () {
+["titulo", "materia", "contenido", "tags", "archivo", "visibilidad"].forEach(
+  function (id) {
+    var campo = document.getElementById(id);
+    if (campo) {
+      campo.addEventListener("input", function () {
         check(id);
       });
+      campo.addEventListener("blur", function () {
+        check(id);
+      });
+      // For file and select, also listen to change
+      if (campo.type === "file" || campo.tagName === "SELECT") {
+        campo.addEventListener("change", function () {
+          check(id);
+        });
+      }
     }
   }
-});
+);
 
 // Simple Markdown to HTML conversion
 function markdownToHtml(md) {

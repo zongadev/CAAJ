@@ -12,12 +12,12 @@
   </head>
   <body>
     <div class="loginfondo">
+      <div class="form-logo"></div>
       <h1>Iniciar sesion</h1>
       {% if param.error_msg_login %}
-        <div class="error-msg-login">{{param.error_msg_login }}</div>
-      {% endif %}
-      {% if param.success_msg %}
-        <div class="success-msg">{{ param.success_msg }}</div>
+      <div class="error-msg-login">{{param.error_msg_login }}</div>
+      {% endif %} {% if param.success_msg %}
+      <div class="success-msg">{{ param.success_msg }}</div>
       {% endif %}
       <form id="form" action="/logging" method="POST">
         <div class="form-group">
@@ -27,7 +27,7 @@
             name="mail"
             id="mail"
             required
-             value="{{ request.form.mail if request.form.mail else '' }}"
+            value="{{ request.form.mail if request.form.mail else '' }}"
             onblur="check(this.id)"
           />
           <span class="error-msg" id="error-mail"></span>
@@ -45,8 +45,6 @@
         </div>
         <div class="form-footer">
           <input type="submit" value="Ingresar" id="submit-btn" />
-          <input type="reset" value="Resetear" />
-          <br />
           <div class="links">
             <a href="register">Registrarse</a>
             <a href="index">Volver</a>

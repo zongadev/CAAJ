@@ -4,6 +4,7 @@
 '''
     
 import mysql.connector
+import os
 
 def conectarBD(configDB=None):
     """
@@ -20,6 +21,8 @@ def conectarBD(configDB=None):
                 user=configDB.get('user'),
                 password=configDB.get('pass'),
                 database=configDB.get('dbname'),
+                charset='utf8mb4',
+                use_unicode=True
             )
         except mysql.connector.Error as e:
             print(f"Error al conectar a la base de datos: {e}")
@@ -62,7 +65,7 @@ def consultaDB(mydb, sQuery="", param=None, title=False,dictionary=False):
                 resultado.insert(0,cursor.column_names)
             if dictionary and resultado is not None:
                 keys=cursor.column_names
-                # Para obtener una respuesta de lista de diccionarios
+                # devuelve una lista de diccionarios en vez de tuplas
                 resultado = [dict(zip(keys, row)) for row in resultado]
         except mysql.connector.Error as e:
             print(f"Error al consultar: {e}")
@@ -88,8 +91,8 @@ def ejecutarDB(mydb, query="", param=None):
         print(f"Error al intentar ejecutar una accion: {e} ")
     return resultado
 
-## Fuciones secundarias. Estas funciones son las que seran llamadas
-## por el model, permitiendo iniciar la conexion, consultar/ejecutar y cerrar la conexion a traves de una funcion
+## Funciones secundarias. Estas son las que se llaman desde model
+## para conectar, consultar/ejecutar y cerrar la conexion a la BD en una sola funcion
 
 def selectDB(configDB=None,sql="",param=None,dictionary=False,title=False):
     ''' ########## SELECT
@@ -153,7 +156,7 @@ def updateDB(configDB=None,sql="",param=None):
     res=None
     if configDB!=None:
         mydb=conectarBD(configDB)
-        res=ejecutarDB(mydb,sQuery=sql,param=param)
+        res=ejecutarDB(mydb,query=sql,param=param)
         cerrarBD(mydb)
     return res
 
@@ -170,7 +173,7 @@ def deleteDB(configDB=None,sql="",param=None):
         cerrarBD(mydb)
     return res
 
-BASE={ "host":"localhost",
-        "user":"root",
-        "pass":"",
-        "dbname":"caaj"}
+BASE={ "host": os.getenv("DB_HOST", "localhost"),
+        "user": os.getenv("DB_USER", "root"),
+        "pass": os.getenv("DB_PASSWORD", ""),
+        "dbname": os.getenv("DB_NAME", "caaj")}

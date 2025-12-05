@@ -2,6 +2,7 @@ from _mysql_db import *
 from datetime import datetime
 
 
+# crea un usuario nuevo en la BD
 def crearUsuario(dic):
     q = """
         INSERT INTO usuario
@@ -16,6 +17,7 @@ def crearUsuario(dic):
     res_insert = insertDB(BASE, q, val)
     return res_insert
 
+# busca un usuario por email y contraseña (para el login)
 def obtenerUsuarioXEmailPass(result,email,passw):
     res=False
     sSql="""SELECT id, apodo,email,pass,id_rol,nombre,apellido,dni 
@@ -35,44 +37,112 @@ def obtenerUsuarioXEmailPass(result,email,passw):
             res=True
     return res
 
-def obtenerIdMateriaPorUUID(uuid):
-    q = "SELECT id FROM materia WHERE uuid = %s"
-    filas = selectDB(BASE, q, (uuid,))
-    if filas and len(filas) > 0:
-        return filas[0][0]
-    return None
+# ahora recibe un ID directamente, no un UUID
+# devuelve el ID tal cual si es valido
+def obtenerIdMateriaPorUUID(materia_id):
+    try:
+        return int(materia_id)
+    except (ValueError, TypeError):
+        return None
 
+# trae todos los apuntes de un usuario con info de la materia
 def obtenerApuntesxUsuario(result, id_usuario):
-    q = """SELECT id, id_usuario, id_materia, head, content, tags, fechahora 
-           FROM apunte WHERE id_usuario=%s;"""
+    q = """SELECT a.id, a.id_usuario, a.id_materia, a.head, a.content, a.tags, a.fechahora, m.materia
+           FROM apunte a
+           LEFT JOIN materia m ON a.id_materia = m.id
+           WHERE a.id_usuario=%s
+           ORDER BY a.fechahora DESC;"""
     val = (id_usuario,)
     filas = selectDB(BASE, q, val)
     print(filas)
     if filas and len(filas) > 0:
         result['apuntes'] = [
             {'id': fila[0],'id_usuario': fila[1],'id_materia': fila[2],
-             'titulo': fila[3],'contenido': fila[4],'tags': fila[5],'fecha': fila[6]
+             'titulo': fila[3],'contenido': fila[4],'tags': fila[5],'fecha': fila[6],
+             'nombre_materia': fila[7]
             } for fila in filas
         ]
     else:
         result['apuntes'] = []
     return result
     
+# trae todas las materias disponibles ordenadas alfabeticamente
 def obtenerMateriasDB(result):
-    q = """ SELECT materia,uuid,id from materia
+    q = """ SELECT materia, id from materia
             ORDER BY materia"""
     filas= selectDB(BASE,q)
     if filas and len(filas)>0:
-        result['materia'] = [{'nombre':fila[0], 'uuid':fila[1], 'id':fila[2]} for fila in filas]
+        result['materia'] = [{'nombre':fila[0], 'id':fila[1]} for fila in filas]
     else:
         result['materia'] =[]
     return result
-def obtenerApuntesXMateriaDB(result, materia_id):
-    q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia
-           FROM apunte AS a
-           INNER JOIN usuario AS u ON a.id_usuario = u.id
-           INNER JOIN materia AS m ON m.id = a.id_materia WHERE m.uuid = %s"""
-    val = (materia_id,)
+
+# busca en toda la BD (materias y apuntes) con normalizacion de tildes
+def buscarGlobal(result, query):
+    print(f"🔍 buscarGlobal llamado con query: '{query}'")
+    if not query or len(query.strip()) == 0:
+        result['resultados'] = []
+        return result
+    
+    # normalizamos el query quitando tildes y pasando a minusculas para buscar mejor
+    # buscamos tanto en materias como en apuntes
+    q = """
+        SELECT 'materia' as tipo, m.id, m.materia as titulo, NULL as contenido, m.id as materia_id
+        FROM materia m
+        WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(m.materia, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+        LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+        UNION
+        SELECT 'apunte' as tipo, a.id, a.head as titulo, a.content as contenido, a.id_materia as materia_id
+        FROM apunte a
+        WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(a.head, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+        LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+        OR LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(a.tags, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+        LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+        LIMIT 10
+    """
+    search_term = f'%{query}%'
+    print(f"🔍 Ejecutando query con term: '{search_term}'")
+    filas = selectDB(BASE, q, (search_term, search_term, search_term))
+    print(f"🔍 Resultados obtenidos: {len(filas) if filas else 0}")
+    
+    if filas and len(filas) > 0:
+        result['resultados'] = [
+            {
+                'tipo': fila[0],
+                'id': fila[1],
+                'titulo': fila[2],
+                'contenido': fila[3][:100] if fila[3] else None,
+                'materia_id': fila[4]
+            } for fila in filas
+        ]
+    else:
+        result['resultados'] = []
+    return result
+def obtenerApuntesXMateriaDB(result, materia_id, query=''):
+    if query:
+        # busqueda con normalizacion de tildes para que funcione mejor
+        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia
+               FROM apunte AS a
+               INNER JOIN usuario AS u ON a.id_usuario = u.id
+               INNER JOIN materia AS m ON m.id = a.id_materia 
+               WHERE m.id = %s
+               AND (
+                   LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(a.head, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+                   LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+                   OR LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(a.tags, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+                   LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+                   OR LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(u.apodo, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) 
+                   LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(%s, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'))
+               )"""
+        search_term = f'%{query}%'
+        val = (materia_id, search_term, search_term, search_term)
+    else:
+        # sin busqueda, traemos todos los apuntes de la materia
+        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia
+               FROM apunte AS a
+               INNER JOIN usuario AS u ON a.id_usuario = u.id
+               INNER JOIN materia AS m ON m.id = a.id_materia WHERE m.id = %s"""
+        val = (materia_id,)
 
     filas = selectDB(BASE, q, val)
     if filas and len(filas) > 0:
@@ -84,6 +154,7 @@ def obtenerApuntesXMateriaDB(result, materia_id):
         result['apuntes'] = []
     return result
 
+# crea un nuevo apunte y devuelve su id
 def crearApunte(dic,idusuario):
     q = """
         INSERT INTO apunte (ID_USUARIO,id_materia,head,content,tags,fechahora)
@@ -93,6 +164,32 @@ def crearApunte(dic,idusuario):
          dic.get('titulo'),dic.get('contenido'),dic.get('tags'),datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     id = insertDB_return_id(BASE,q,val)
     return id
+
+# actualiza un apunte existente con nueva info
+def actualizarApunte(id_apunte, dic):
+    q = """
+        UPDATE apunte 
+        SET id_materia=%s, head=%s, content=%s, tags=%s
+        WHERE id=%s
+    """
+    materia_id = obtenerIdMateriaPorUUID(dic.get('materia'))
+    print(f"DEBUG actualizarApunte - materia raw: {dic.get('materia')}, convertido: {materia_id}")
+    print(f"DEBUG actualizarApunte - titulo: {dic.get('titulo')}, contenido: {dic.get('contenido')}, tags: {dic.get('tags')}")
+    
+    if materia_id is None:
+        print(f"ERROR: materia_id es None para valor: {dic.get('materia')}")
+        return False
+        
+    val=(materia_id, dic.get('titulo'), dic.get('contenido'), dic.get('tags'), id_apunte)
+    try:
+        updateDB(BASE, q, val)
+        print(f"Apunte {id_apunte} actualizado exitosamente")
+        return True
+    except Exception as e:
+        print(f"Error actualizando apunte: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 def obtenerApunteXidDB(result,id):
     q = """SELECT id_usuario, id_materia, head, content, tags, fechahora
@@ -133,12 +230,55 @@ def obtenerMediaXidDB(result, id_apunte):
 
 def crearMedia(id_apunte, file_name, nombre_uuid):
     q = """
-        INSERT INTO media (id_apunte, nombre, path, nombre_uuid)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO media (id_apunte, nombre, path)
+        VALUES (%s, %s, %s)
     """
-    val = (id_apunte, file_name, '/static/uploads/' + nombre_uuid, nombre_uuid)
+    val = (id_apunte, file_name, '/static/uploads/' + nombre_uuid)
     filas = insertDB(BASE, q, val)
     return filas
+
+# elimina un archivo de un apunte (tanto de la BD como del disco)
+def eliminarArchivoApunte(id_apunte, nombre_archivo):
+    # primero buscamos el path para poder borrar el archivo fisico
+    q = "SELECT path FROM media WHERE id_apunte = %s AND nombre = %s"
+    filas = selectDB(BASE, q, (id_apunte, nombre_archivo))
+    
+    if not filas or len(filas) == 0:
+        return False
+    
+    path = filas[0][0]
+    
+    # borramos el registro de la BD
+    q_delete = "DELETE FROM media WHERE id_apunte = %s AND nombre = %s"
+    deleteDB(BASE, q_delete, (id_apunte, nombre_archivo))
+    
+    # ahora borramos el archivo del servidor
+    try:
+        import os
+        # el path es tipo '/static/uploads/archivo.pdf', extraemos el nombre
+        if path.startswith('/static/uploads/'):
+            nombre_uuid = path.replace('/static/uploads/', '')
+            file_path = os.path.join('static', 'uploads', nombre_uuid)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+        return True
+    except Exception as e:
+        print(f"Error al eliminar archivo físico: {e}")
+        return False
+
+# trae el voto del usuario para un apunte (like, dislike o nada)
+def obtenerVotoUsuario(result, id_apunte, id_usuario):
+    if not id_usuario:
+        result['voto_usuario'] = None
+        return
+    
+    q = "SELECT valor FROM reaccion WHERE id_apunte = %s AND id_usuario = %s"
+    filas = selectDB(BASE, q, (id_apunte, id_usuario))
+    
+    if filas and len(filas) > 0:
+        result['voto_usuario'] = filas[0][0]  # puede ser 'like' o 'dislike'
+    else:
+        result['voto_usuario'] = None
 
 def obtenerUsuarioPorIdDB(result, id_usuario):
     q = "SELECT id, apodo, nombre, apellido, email FROM usuario WHERE id = %s"
@@ -180,10 +320,10 @@ def obtenerComentariosDB(result, id_apunte):
     return result
     
 def obtenerNombreMateriaPorId(materia_id):
-    q = "SELECT materia FROM materia WHERE uuid = %s"
+    q = "SELECT materia FROM materia WHERE id = %s"
     filas = selectDB(BASE, q, (materia_id,))
     if filas and len(filas) > 0:
-        return filas[0]
+        return filas[0][0]
     return "Materia desconocida"
 
 def crearComentario(id_apunte, id_usuario, comentario):
@@ -192,20 +332,51 @@ def crearComentario(id_apunte, id_usuario, comentario):
         VALUES (%s, %s, %s, NOW())
     """
     try:
-        insertDB(BASE, q, (id_apunte, id_usuario, comentario))
-        return True
+        from _mysql_db import insertDB_return_id
+        id_comentario = insertDB_return_id(BASE, q, (id_apunte, id_usuario, comentario))
+        return id_comentario
     except Exception as e:
         print(e)
+        return None
+
+def actualizarComentario(id_comentario, contenido):
+    q = """
+        UPDATE comentario 
+        SET content=%s
+        WHERE id=%s
+    """
+    try:
+        updateDB(BASE, q, (contenido, id_comentario))
+        return True
+    except Exception as e:
+        print(f"Error actualizando comentario: {e}")
         return False
     
+# maneja los votos de un apunte (agregar, quitar, cambiar)
 def votar_apunte_db(id_apunte, id_usuario, tipo):
-    # Elimina voto anterior si existe
-    q_del = "DELETE FROM reaccion WHERE id_apunte=%s AND id_usuario=%s"
-    deleteDB(BASE, q_del, (id_apunte, id_usuario))
-    # Inserta el nuevo voto
-    q_ins = "INSERT INTO reaccion (id_apunte, id_usuario, valor) VALUES (%s, %s, %s)"
-    insertDB(BASE, q_ins, (id_apunte, id_usuario, tipo))
-    # Cuenta likes y dislikes
+    # chequeamos si el usuario ya voto antes
+    q_check = "SELECT valor FROM reaccion WHERE id_apunte=%s AND id_usuario=%s"
+    filas = selectDB(BASE, q_check, (id_apunte, id_usuario))
+    
+    voto_existente = filas[0][0] if filas and len(filas) > 0 else None
+    voto_actual = None
+    
+    # si vota lo mismo que ya tenia, se lo quitamos (toggle)
+    if voto_existente == tipo:
+        q_del = "DELETE FROM reaccion WHERE id_apunte=%s AND id_usuario=%s"
+        deleteDB(BASE, q_del, (id_apunte, id_usuario))
+        voto_actual = None  # voto removido
+    else:
+        # borramos el voto anterior si habia uno
+        if voto_existente:
+            q_del = "DELETE FROM reaccion WHERE id_apunte=%s AND id_usuario=%s"
+            deleteDB(BASE, q_del, (id_apunte, id_usuario))
+        # metemos el voto nuevo
+        q_ins = "INSERT INTO reaccion (id_apunte, id_usuario, valor) VALUES (%s, %s, %s)"
+        insertDB(BASE, q_ins, (id_apunte, id_usuario, tipo))
+        voto_actual = tipo  # voto nuevo activo
+    
+    # contamos cuantos likes y dislikes tiene ahora
     q_count = "SELECT valor, COUNT(*) FROM reaccion WHERE id_apunte=%s GROUP BY valor"
     filas = selectDB(BASE, q_count, (id_apunte,))
     likes = dislikes = 0
@@ -214,7 +385,7 @@ def votar_apunte_db(id_apunte, id_usuario, tipo):
             likes = count
         elif tipo_v == 'dislike':
             dislikes = count
-    return True, likes, dislikes
+    return True, likes, dislikes, voto_actual
 
 def contar_reacciones_apunte(id_apunte):
     q = "SELECT valor, COUNT(*) FROM reaccion WHERE id_apunte=%s GROUP BY valor"

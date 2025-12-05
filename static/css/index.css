@@ -78,7 +78,7 @@
   width: 100%;
   background: #fff;
   border-radius: 0 0 12px 12px;
-  box-shadow: 0 4px 16px rgba(16, 43, 66, 0.10);
+  box-shadow: 0 4px 16px rgba(16, 43, 66, 0.1);
   z-index: 10;
   display: none;
   flex-direction: column;

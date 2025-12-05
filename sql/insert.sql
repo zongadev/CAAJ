@@ -1,3 +1,5 @@
+﻿/*!40101 SET NAMES utf8mb4 */;
+
 -- --------------------------------------------------------
 -- 1. Tabla rol
 -- --------------------------------------------------------
@@ -24,7 +26,7 @@ VALUES
 INSERT INTO `usuario`
   (`apodo`,  `email`,              `pass`,           `id_rol`, `nombre`, `apellido`, `dni`)
 VALUES
-  ('juanp',  'juan.perez@uni.edu', 'SierraLuna',     1,        'Juan',   'Pérez',   '12345678'),
+  ('juanp',  'juan.perez@uni.edu', 'SierraLuna123',  1,        'Juan',   'Pérez',   '12345678'),
   ('martav', 'marta.vega@uni.edu', 'RioAmarillo',    1,        'Marta',  'Vega',    '87654321'),
   ('profc',  'carlos@uni.edu',     'LlaveMaestra',   2,        'Carlos', 'Gómez',   '11223344');
 /*
@@ -81,3 +83,4 @@ VALUES
  - Asegura cálculos directos de puntaje con SUM(valor).
  - La columna `valor` debe estar definida como TINYINT o SMALLINT.
 */
+

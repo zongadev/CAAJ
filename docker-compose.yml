@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: caaj_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: caaj
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/create.sql:/docker-entrypoint-initdb.d/01-create.sql
+      - ./sql/insert.sql:/docker-entrypoint-initdb.d/02-insert.sql
+    networks:
+      - caaj_network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-prootpassword",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flask Application
+  web:
+    build: .
+    container_name: caaj_app
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./static:/app/static
+      - ./_mysql_db.py:/app/_mysql_db.py
+      - ./controller.py:/app/controller.py
+      - ./model.py:/app/model.py
+      - ./route.py:/app/route.py
+      - ./run.py:/app/run.py
+      - ./templates:/app/templates
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=caaj
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - caaj_network
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: caaj_phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      UPLOAD_LIMIT: 100M
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - caaj_network
+
+networks:
+  caaj_network:
+    driver: bridge
+
+volumes:
+  mysql_data:

@@ -4,28 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ param.apunte.titulo if param.apunte.titulo else "CAAJ" }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/apunte.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/apunte.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/header.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/global.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/footer.css') }}"
+    />
   </head>
   <body>
     <header>
       <div class="nav-left">
         <a class="nav-logo" href="/index"></a>
         {% if param.menuHead.mnub01 %}
-          <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
-        {% endif %}
-        {% if param.menuHead.mnub04 %}
-          <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+        <a
+          class="{{ param.menuHead.mnub01.class }}"
+          href="{{ param.menuHead.mnub01.href }}"
+          >{{ param.menuHead.mnub01.content }}</a
+        >
+        {% endif %} {% if param.menuHead.mnub04 %}
+        <a
+          class="{{ param.menuHead.mnub04.class }}"
+          href="{{ param.menuHead.mnub04.href }}"
+          >{{ param.menuHead.mnub04.content }}</a
+        >
         {% endif %}
       </div>
       <div class="nav-right">
         {% if param.menuHead.mnub02 %}
-          <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
-        {% endif %}
-        {% if param.menuHead.mnub03 %}
-          <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+        <a
+          class="{{ param.menuHead.mnub02.class }}"
+          href="{{ param.menuHead.mnub02.href }}"
+          >{{ param.menuHead.mnub02.content }}</a
+        >
+        {% endif %} {% if param.menuHead.mnub03 %}
+        <a
+          class="{{ param.menuHead.mnub03.class }}"
+          href="{{ param.menuHead.mnub03.href }}"
+          >{{ param.menuHead.mnub03.content }}</a
+        >
         {% endif %}
       </div>
     </header>
@@ -36,85 +62,170 @@
           <div class="article-header">
             <h1 id="section1">{{ param.apunte.titulo }}</h1>
             <p class="author">
-              por
-              {% if param.apunte.usuario and param.apunte.usuario.apodo %}
-                <a href="/profile?id_usuario={{ param.apunte.usuario.id }}">
-                  {{ param.apunte.usuario.apodo }}
-                </a>
-              {% else %}
-                Anónimo
-              {% endif %}
+              por {% if param.apunte.usuario and param.apunte.usuario.apodo %}
+              <a href="/profile?id_usuario={{ param.apunte.usuario.id }}">
+                {{ param.apunte.usuario.apodo }}
+              </a>
+              {% else %} Anónimo {% endif %}
             </p>
           </div>
 
-          <div class="apunte-content">
-            {{ param.apunte.contenido | safe }}
+          <div class="apunte-content" id="apunte-content">
+            {{ param.apunte.contenido }}
           </div>
 
-          <h3>Archivos adjuntos</h3>
+          <h3 class="section-title">Archivos adjuntos</h3>
           <div id="media-list" class="media-list">
-            {% if param.media and param.media|length > 0 %}
-              {% for archivo in param.media %}
-                {% set ext = archivo.path.split('.')[-1]|lower %}
-                <div class="media-item">
-                  {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
-                    <img src="{{ archivo.path }}" alt="{{ archivo.nombre }}" class="media-img"/>
-                    <div>
-                      <a href="{{ archivo.path }}" download="{{ archivo.nombre }}">Descargar imagen</a>
-                    </div>
-                  {% else %}
-                    <a href="{{ archivo.path }}" download="{{ archivo.nombre }}">{{ archivo.nombre }}</a>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            {% else %}
-              <div class="media-vacia">No hay archivos adjuntos.</div>
+            {% if param.media and param.media|length > 0 %} {% for archivo in
+            param.media %} {% set ext = archivo.path.split('.')[-1]|lower %}
+            <div class="media-item">
+              {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+              <img
+                src="{{ archivo.path }}"
+                alt="{{ archivo.nombre }}"
+                class="media-img"
+              />
+              <div>
+                <a href="{{ archivo.path }}" download="{{ archivo.nombre }}"
+                  >⬇️ Descargar imagen</a
+                >
+              </div>
+              {% else %}
+              <a href="{{ archivo.path }}" download="{{ archivo.nombre }}"
+                >⬇️ {{ archivo.nombre }}</a
+              >
+              {% endif %}
+            </div>
+            {% endfor %} {% else %}
+            <div class="media-vacia">No hay archivos adjuntos.</div>
             {% endif %}
           </div>
 
           <div class="vote-section">
-            <button class="vote-btn upvote" onclick="votarApunte('like')" title="Me gusta"></button>
+            <button
+              class="vote-btn upvote{% if param.voto_usuario == 'like' %} active{% endif %}"
+              onclick="votarApunte('like')"
+              title="Me gusta"
+            ></button>
             <span id="like-count">{{ param.apunte.likes or 0 }}</span>
-            <button class="vote-btn downvote" onclick="votarApunte('dislike')" title="No me gusta"></button>
+            <button
+              class="vote-btn downvote{% if param.voto_usuario == 'dislike' %} active{% endif %}"
+              onclick="votarApunte('dislike')"
+              title="No me gusta"
+            ></button>
             <span id="dislike-count">{{ param.apunte.dislikes or 0 }}</span>
           </div>
-           {% if session['id_usuario'] == param.apunte.usuario.id or session['rol'] == 3 %}
-            <form id="form-borrar-apunte" method="post" action="/borrar_apunte" onsubmit="return confirm('¿Seguro que deseas borrar este apunte?');">
-              <input type="hidden" name="id_apunte" value="{{ param.apunte.id }}">
-              <button type="submit" class="delete-btn">Borrar apunte</button>
+          {% if session['id_usuario'] == param.apunte.usuario.id or
+          session['rol'] == 3 %}
+          <div class="apunte-actions">
+            <a href="/editar_apunte?id={{ param.apunte.id }}" class="edit-btn"
+              >✏️ Editar apunte</a
+            >
+            <form
+              id="form-borrar-apunte"
+              method="post"
+              action="/borrar_apunte"
+              onsubmit="return confirm('¿Seguro que deseas borrar este apunte?');"
+            >
+              <input
+                type="hidden"
+                name="id_apunte"
+                value="{{ param.apunte.id }}"
+              />
+              <button type="submit" class="delete-btn">
+                🗑️ Eliminar apunte
+              </button>
             </form>
-            {% endif %}
-          <form id="formComentario" onsubmit="return false;">
-            <label for="comentario">Deja tu comentario:</label>
-            <textarea id="comentario" name="comentario" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
-            <input type="hidden" name="id_apunte" value="{{ request.args.get('apunte') }}">
-            <span class="error-msg" id="error-comment"></span>
-            <button type="button" onclick="publicarComentario()">Publicar comentario</button>
-          </form>
+          </div>
+          {% endif %}
           <div class="commentaries-section">
             <h3>Comentarios</h3>
             <div id="comments-list">
               <!-- Aquí se agregan los comentarios nuevos -->
               {% for comentario in param.comentarios %}
-                <div class="comment">
-                  <div class="author">
-                    <a href="/profile?id_usuario={{ comentario.id_usuario }}">
-                      <strong>{{ comentario.apodo }}</strong>
-                    </a>
-                    <span class="comment-date">{{ comentario.fecha }}</span>
-                    {% if session['id_usuario'] == comentario.id_usuario or session['rol'] == 3 %}
-                      <form method="post" action="/borrar_comentario" style="display:inline;">
-                        <input type="hidden" name="id_comentario" value="{{ comentario.id }}">
-                        <button type="submit" class="delete-btn" style="margin-left:10px;" onclick="return confirm('¿Eliminar este comentario?');">🗑️</button>
-                      </form>
-                    {% endif %}
-                  </div>
-                  <div class="comment-text">
-                    {{ comentario.comentario }}
+              <div class="comment" data-comment-id="{{ comentario.id }}">
+                <div class="author">
+                  <a href="/profile?id_usuario={{ comentario.id_usuario }}">
+                    <strong>{{ comentario.apodo }}</strong>
+                  </a>
+                  <span class="comment-date">{{ comentario.fecha }}</span>
+                  {% if session['id_usuario'] == comentario.id_usuario or
+                  session['rol'] == 3 %}
+                  <button
+                    class="edit-comment-btn"
+                    onclick="editarComentario({{ comentario.id }})"
+                    title="Editar comentario"
+                  >
+                    ✏️
+                  </button>
+                  <form
+                    method="post"
+                    action="/borrar_comentario"
+                    class="inline-form"
+                  >
+                    <input
+                      type="hidden"
+                      name="id_comentario"
+                      value="{{ comentario.id }}"
+                    />
+                    <button
+                      type="submit"
+                      class="delete-btn delete-comment-btn"
+                      onclick="return confirm('¿Eliminar este comentario?');"
+                    >
+                      🗑️
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
+                <div class="comment-text" id="comment-text-{{ comentario.id }}">
+                  {{ comentario.comentario }}
+                </div>
+                <div
+                  class="comment-edit"
+                  id="comment-edit-{{ comentario.id }}"
+                  style="display: none"
+                >
+                  <textarea id="comment-textarea-{{ comentario.id }}" rows="3">
+{{ comentario.comentario }}</textarea
+                  >
+                  <div class="edit-actions">
+                    <button
+                      class="save-comment-btn"
+                      onclick="guardarComentario({{ comentario.id }})"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      class="cancel-comment-btn"
+                      onclick="cancelarEdicion({{ comentario.id }})"
+                    >
+                      Cancelar
+                    </button>
                   </div>
                 </div>
+              </div>
               {% endfor %}
             </div>
+            <form id="formComentario" onsubmit="return false;">
+              <label for="comentario">Deja tu comentario:</label>
+              <textarea
+                id="comentario"
+                name="comentario"
+                rows="4"
+                cols="50"
+                placeholder="Escribe tu comentario aquí..."
+              ></textarea>
+              <input
+                type="hidden"
+                name="id_apunte"
+                value="{{ request.args.get('apunte') }}"
+              />
+              <span class="error-msg" id="error-comment"></span>
+              <button type="button" onclick="publicarComentario()">
+                Publicar comentario
+              </button>
+            </form>
           </div>
         </article>
       </div>
@@ -131,6 +242,53 @@
     <script src="{{ url_for('static', filename='js/comments.js') }}"></script>
     <script src="/static/js/ajax.js"></script>
     <script src="/static/js/apunte.js"></script>
-   
+    <script src="/static/js/edit-comment.js"></script>
+    <script>
+      // Convertir markdown a HTML al cargar la página
+      function markdownToHtml(md) {
+        // Primero procesar headers ANTES de convertir \n a <br>
+        // Necesitamos capturar headers que pueden no tener espacio después del #
+        md = md.replace(/^###\s*(.*)$/gm, "<h3>$1</h3>");
+        md = md.replace(/^##\s*(.*)$/gm, "<h2>$1</h2>");
+        md = md.replace(/^#\s*(.*)$/gm, "<h1>$1</h1>");
+
+        // Listas: - item (antes de <br>)
+        md = md.replace(/^-\s+(.*)$/gm, "<li>$1</li>");
+
+        // Negritas: **text**
+        md = md.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+        // Italica: *text* (pero no confundir con listas)
+        md = md.replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+
+        // Links: [text](url)
+        md = md.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank">$1</a>'
+        );
+
+        // Agrupar <li> consecutivos en <ul>
+        md = md.replace(/(<li>.*<\/li>\n?)+/g, function (match) {
+          return "<ul>" + match + "</ul>";
+        });
+
+        // Saltos de linea (ÚLTIMO paso)
+        md = md.replace(/\n/g, "<br>");
+
+        return md;
+      }
+
+      // Aplicar conversión al contenido del apunte
+      document.addEventListener("DOMContentLoaded", function () {
+        var contentElement = document.getElementById("apunte-content");
+        if (contentElement) {
+          var markdown = contentElement.textContent.trim();
+          console.log("Markdown original:", markdown); // Debug
+          var html = markdownToHtml(markdown);
+          console.log("HTML convertido:", html); // Debug
+          contentElement.innerHTML = html;
+        }
+      });
+    </script>
   </body>
 </html>

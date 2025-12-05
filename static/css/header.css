@@ -25,6 +25,14 @@ header {
   align-items: center;
 }
 
+.nav-right {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: auto;
+}
+
 .nav-button,
 .login-btn {
   color: #102b42;
