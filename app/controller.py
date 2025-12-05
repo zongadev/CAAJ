@@ -240,8 +240,15 @@ def votar_apunte_process(data):
     id_apunte = data.get('id_apunte')
     tipo = data.get('tipo')  # puede ser 'like' o 'dislike'
     id_usuario = session.get('id_usuario')
-    if not id_usuario or not id_apunte or tipo not in ['like', 'dislike']:
-        return jsonify({'success': False, 'msg': 'Datos inválidos'}), 400
+    
+    # Validaciones específicas
+    if not id_usuario:
+        return jsonify({'success': False, 'msg': 'Debes iniciar sesión para votar', 'requiresLogin': True}), 401
+    if not id_apunte:
+        return jsonify({'success': False, 'msg': 'ID de apunte inválido'}), 400
+    if tipo not in ['like', 'dislike']:
+        return jsonify({'success': False, 'msg': 'Tipo de voto inválido'}), 400
+    
     exito, likes, dislikes, voto_actual = votar_apunte_db(id_apunte, id_usuario, tipo)
     return jsonify({'success': exito, 'likes': likes, 'dislikes': dislikes, 'voto_actual': voto_actual})
 

@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Debounce: esperar 300ms antes de buscar
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-      fetch(`/api/buscar?q=${encodeURIComponent(query)}`)
+      fetch(`/buscar?q=${encodeURIComponent(query)}`)
         .then((response) => response.json())
         .then((data) => {
           suggestions = data;

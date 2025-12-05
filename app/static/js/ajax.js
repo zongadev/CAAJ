@@ -1,88 +1,77 @@
 function queryAjax(url, idDest,method="POST",dataSend=null) {
-    /**Realiza una una petición request al servidor 'url'. NO envía datos 
-     * al servidor 'xhr.send(null)', sólo hace la petición a la url y 
-     * almacena la respuesta dentro del nodo cuyo id sea 'idDest'
-     * 
-     * url:    es la dirección donde se obtiene los datos (es el servidor)
-     * idDest: es el id de un elemento html de la página. Es donde se escribirán 
-     *         los datos recibido de la url.
-     * method: es el metodo del request. Es la forma en que se trasnmite los datos
-     *         en el protocolo htttp. Puede ser POST o GET. Por default es POST.
-     * 
-     * dataSend: son los datos que se envian al servidor en la petición. Por lo general 
-     *           le asignamos 'FormData' donde enviaremos un estructura clave-valor.
-     *           Si dataSend=null entonces en la paticion no estamos enviando datos 
-     *           hacia el servidor.
-     *    
-     */
+    // hace un request al servidor
+    // url: donde vamos a pedir los datos
+    // idDest: id del elemento donde metemos la respuesta
+    // method: POST o GET
+    // dataSend: datos a enviar (opcional)
 
-    const xhr = new XMLHttpRequest();                          // Creo el objeto AJAX     
+    const xhr = new XMLHttpRequest(); // crea objeto AJAX     
     if(xhr) {
-        xhr.timeout = 2000;                                    // setear el tiempo de timeout.
-        xhr.open(method, url, true);                           // Abre la connección AJAX. false = sincro , true = asincro
-        document.body.style.cursor = 'wait';                   // Setea la espera: Poner el cursor del mouse en espera
-                                                               // otra opocion sería setear una imagen de espera en el div   
+        xhr.timeout = 2000; // 2 segundos antes de explotar
+        xhr.open(method, url, true); // abre la conexión (true = asincro)
+        document.body.style.cursor = 'wait'; // muestra cursor de espera
+                                             // para que el usuario sepa que algo está pasando
 
         xhr.onload = () => {
-            // Evento load  se activa cuando una solicitud XMLHttpRequest 
-            // se completa exitosamente.
-            document.body.style.cursor = 'default';        // Resetea la espera: Poner el cursor del mouse en normal
-            textHTML = xhr.responseText;                   // RECUPERA la respuesta que viene del servidor en formato html
-            setDataIntoNode(idDest,textHTML);  
+            // cuando termina el request
+            document.body.style.cursor = 'default'; // cursor normal de nuevo
+            textHTML = xhr.responseText; // agarra la respuesta
+            setDataIntoNode(idDest,textHTML); // mete la respuesta en el HTML
             //console.log("Terminado con exito");
         };
 
         xhr.ontimeout = () => {
-            // Evento timeout se activa cuando la solicitud finaliza debido a que 
-            // expira el tiempo preestablecido.
+            // si se demora demasiado
             // document.body.style.cursor = 'default'; 
             console.log("Terminado por expiración de tiempo");
         };
 
         xhr.onloadend = () => {
-            // El evento 'loadend' se activa cuando se completa una solicitud, ya sea con éxito 
-            // (después de 'load') o sin éxito  (por un 'timeout', un 'abort', o un 'error')
-            document.body.style.cursor = 'default';  
-                     
+            // cuando termina todo (bien o mal)
+            document.body.style.cursor = 'default'; // vuelve a normal
         };  
-        xhr.send(dataSend); // Envio de solicitud 'request' al sevidor
+        xhr.send(dataSend); // envía el request
     }
     else{
-        console.log('No se pudo instanciar el objeto AJAX!'); // Falló la conección
+        console.log('No se pudo instanciar el objeto AJAX!'); // algo pasó mal
     }
 }
 
 function queryAjaxForm(url, idDest, idForm) {
+    // agarra un form y lo envía por AJAX
     const form = document.getElementById(idForm);
-    if (!form) return;
-    const formData = new FormData(form);
+    if (!form) return; // si no existe el form, sale
+    const formData = new FormData(form); // convierte el form en datos
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    document.body.style.cursor = 'wait';
+    const xhr = new XMLHttpRequest(); // crea objeto AJAX
+    xhr.open('POST', url, true); // abre conexión POST
+    document.body.style.cursor = 'wait'; // cursor de espera
 
     xhr.onload = function() {
-        document.body.style.cursor = 'default';
+        document.body.style.cursor = 'default'; // vuelve cursor normal
         if (xhr.status === 200) {
-            // Agrega el nuevo comentario al final de la lista
+            // si todo salió bien
+            // agrega el nuevo comentario a la lista
             const commentsList = document.getElementById(idDest);
             if (commentsList) {
-                commentsList.innerHTML += xhr.responseText;
+                commentsList.innerHTML += xhr.responseText; // mete la respuesta en el html
             }
         } else {
-            // Muestra el error en el span de error
+            // si salió mal
+            // muestra el error
             const errorMsg = document.getElementById('error-comment');
             if (errorMsg) errorMsg.textContent = 'Error al publicar el comentario.';
         }
     };
 
     xhr.onerror = function() {
-        document.body.style.cursor = 'default';
+        document.body.style.cursor = 'default'; // vuelve cursor normal
+        // fallo la conexión
         const errorMsg = document.getElementById('error-comment');
         if (errorMsg) errorMsg.textContent = 'Error de red.';
     };
 
-    xhr.send(formData);
+    xhr.send(formData); // envía el formulario
 }
 
 function queryAjaxJson(url, data, callback) {
@@ -93,8 +82,12 @@ function queryAjaxJson(url, data, callback) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             document.body.style.cursor = 'default';
-            if (xhr.status === 200) {
-                callback(JSON.parse(xhr.responseText));
+            if (xhr.status === 200 || xhr.status === 400 || xhr.status === 401) {
+                try {
+                    callback(JSON.parse(xhr.responseText));
+                } catch (e) {
+                    callback({success: false, msg: 'Error al procesar respuesta del servidor'});
+                }
             } else {
                 callback({success: false, msg: 'Error de red o servidor'});
             }

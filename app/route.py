@@ -43,6 +43,9 @@ def route(app):
     @app.route('/profile')
     def profile():
         perfil_id= request.args.get('id_usuario') or session.get('id_usuario')
+        # Si no hay ID especificado y no hay sesión, redirigir a login
+        if not perfil_id:
+            return redirect('/login')
         param={}
         return profile_pagina(param,perfil_id)
     
@@ -54,35 +57,49 @@ def route(app):
     
     @app.route('/borrar_apunte', methods = ['POST'])
     def borrar_apunte():
+        if not session.get('id_usuario'):
+            return jsonify({'success': False, 'msg': 'Debes iniciar sesión'}), 401
         return borrar_apunte_process()
     
     @app.route('/editar_apunte')
     def editar_apunte():
+        if not session.get('id_usuario'):
+            return redirect('/login')
         param = {}
         id_apunte = request.args.get('id')
         return editar_apunte_pagina(param, id_apunte)
     
     @app.route('/actualizar_apunte', methods=['POST'])
     def actualizar_apunte():
+        if not session.get('id_usuario'):
+            return jsonify({'success': False, 'msg': 'Debes iniciar sesión'}), 401
         param = {}
         return actualizar_apunte_process(request, param)
     
     @app.route('/eliminar_archivo', methods=['POST'])
     def eliminar_archivo():
+        if not session.get('id_usuario'):
+            return jsonify({'success': False, 'msg': 'Debes iniciar sesión'}), 401
         param = {}
         return eliminar_archivo_process(request, param)
         
     @app.route('/publicar_comentario', methods =['POST'])
     def publicar_cometario():
+        if not session.get('id_usuario'):
+            return '<span class="error-msg">Debes iniciar sesión para comentar</span>', 401
         param={}
         return publicar_comentario_process(param,request)
     
     @app.route('/borrar_comentario', methods=['POST'])
     def borrar_comentario():
+        if not session.get('id_usuario'):
+            return jsonify({'success': False, 'msg': 'Debes iniciar sesión'}), 401
         return borrar_comentario_process()
     
     @app.route('/actualizar_comentario', methods=['POST'])
     def actualizar_comentario():
+        if not session.get('id_usuario'):
+            return jsonify({'success': False, 'msg': 'Debes iniciar sesión'}), 401
         return actualizar_comentario_process()
     
     @app.route('/materias')
@@ -108,12 +125,12 @@ def route(app):
         res='Pagina "{}" no encontrada'.format(name)
         return res
 
-    @app.route('/api/materias')
+    @app.route('/materias')
     def api_materias():
         param ={}
         return materiasJSON(param)
     
-    @app.route('/api/buscar')
+    @app.route('/buscar')
     def api_buscar():
         query = request.args.get('q', '')
         param = {}
@@ -125,11 +142,16 @@ def route(app):
     
     @app.route('/nuevoapunte')
     def editor():
+        # Validar que haya sesión iniciada
+        if not session.get('id_usuario'):
+            return redirect('/login')
         param ={}
         return nuevoapunte_pagina(param)
     
     @app.route('/publicar', methods = ['POST'])
     def publicar():
+        if not session.get('id_usuario'):
+            return redirect('/login')
         param={}
         return publicar_process(request,param)
         

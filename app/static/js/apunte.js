@@ -32,7 +32,12 @@ function votarApunte(tipo) {
         }
         // Si data.voto_actual es null, no se agrega ninguna clase (voto removido)
       } else {
-        alert(data.msg || "Error al votar");
+        if (data.requiresLogin) {
+          alert('Debes iniciar sesión para votar');
+          window.location.href = '/login';
+        } else {
+          alert(data.msg || "Error al votar");
+        }
       }
     }
   );

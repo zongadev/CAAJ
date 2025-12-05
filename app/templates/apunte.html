@@ -207,6 +207,7 @@
               </div>
               {% endfor %}
             </div>
+            {% if session.get('id_usuario') %}
             <form id="formComentario" onsubmit="return false;">
               <label for="comentario">Deja tu comentario:</label>
               <textarea
@@ -226,6 +227,11 @@
                 Publicar comentario
               </button>
             </form>
+            {% else %}
+            <div class="login-prompt">
+              <p>Debes <a href="/login">iniciar sesión</a> para dejar comentarios.</p>
+            </div>
+            {% endif %}
           </div>
         </article>
       </div>
