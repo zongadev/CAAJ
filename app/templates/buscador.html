@@ -44,12 +44,22 @@
   {% if param.apuntes and param.apuntes|length > 0 %}
     {% for apunte in param.apuntes %}
       <a class="card" href="/apunte?apunte={{ apunte.id }}">
-        <h2 class="card-title">{{ apunte.titulo }}</h2>
-        <p class="card-description">{{ apunte.contenido|truncate(64, True, '...') }}</p>
-        <p class="card-author">Autor: {{ apunte.usuario }}</p>
+        <div class="card-header">
+          <h2 class="card-title">{{ apunte.titulo }}</h2>
+          <span class="card-date">📅 {{ apunte.fecha.strftime('%d/%m/%Y') if apunte.fecha and apunte.fecha.strftime else apunte.fecha }}</span>
+        </div>
+        <p class="card-description" data-content="{{ apunte.contenido|striptags|truncate(150, True, '') }}"></p>
         {% if apunte.tags %}
-          <p class="card-tags">Tags: {{ apunte.tags }}</p>
+          <div class="card-tags-container">
+            {% for tag in apunte.tags.split(',') %}
+              <span class="card-tag">{{ tag.strip() }}</span>
+            {% endfor %}
+          </div>
         {% endif %}
+        <div class="card-footer">
+          <span class="card-author">👤 {{ apunte.usuario }}</span>
+          <span class="card-materia">📚 {{ apunte.nombre_materia if apunte.nombre_materia else 'Sin materia' }}</span>
+        </div>
       </a>
     {% endfor %}
   {% else %}
@@ -74,5 +84,43 @@
         </footer>
       </div>
       <script src="./static/js/buscador.js"></script>
+      <script>
+        // Limpiar símbolos de Markdown del contenido
+        function cleanMarkdown(text) {
+          if (!text) return "";
+
+          // Eliminar enlaces pero mantener el texto [texto](url) -> texto
+          text = text.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
+
+          // Eliminar imágenes ![alt](url) -> ''
+          text = text.replace(/!\[([^\]]*)\]\([^\)]+\)/g, "");
+
+          // Eliminar símbolos de Markdown
+          text = text
+            .replace(/#/g, "")
+            .replace(/\*/g, "")
+            .replace(/`/g, "")
+            .replace(/>/g, "")
+            .replace(/_/g, "")
+            .replace(/^- /gm, "");
+
+          return text.trim();
+        }
+
+        // Procesar todas las descripciones de cards al cargar la página
+        document.addEventListener("DOMContentLoaded", function () {
+          const descriptions = document.querySelectorAll(".card-description");
+
+          descriptions.forEach((desc) => {
+            const content = desc.getAttribute("data-content");
+            if (content) {
+              const cleaned = cleanMarkdown(content);
+              const truncated =
+                cleaned.length > 120 ? cleaned.substring(0, 120) + "..." : cleaned;
+              desc.textContent = truncated;
+            }
+          });
+        });
+      </script>
     </body>
   </html>

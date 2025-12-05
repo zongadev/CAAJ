@@ -78,7 +78,8 @@ def borrar_apunte_process():
     apunte = param.get('apunte', {})
     if not id_usuario or not id_apunte:
         return "No autorizado 22"
-    if rol == 3 or (apunte.get('usuario', {}).get('id') == id_usuario):
+    # Rol 3 = admin, rol 2 = profesor, pueden borrar cualquier apunte. Otros solo el suyo
+    if rol == 3 or rol == 2 or (apunte.get('usuario', {}).get('id') == id_usuario):
         exito = borrarApunteDB(id_apunte)
         if exito:
             return redirect('/index')  # manda al index si sale todo bien
@@ -97,8 +98,9 @@ def editar_apunte_pagina(param, id_apunte):
     obtenerApunteXid(param, id_apunte)
     apunte = param.get('apunte', {})
     
-    # chequeamos que seas el dueño o admin para poder editar
-    if rol != 3 and apunte.get('usuario', {}).get('id') != id_usuario:
+    # chequeamos que seas el dueño, profesor o admin para poder editar
+    # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
+    if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
         return "No autorizado"
     
     obtenerMenuHead(param)
@@ -121,7 +123,8 @@ def actualizar_apunte_process(request, param):
     obtenerApunteXid(param, id_apunte)
     apunte = param.get('apunte', {})
     
-    if rol != 3 and apunte.get('usuario', {}).get('id') != id_usuario:
+    # Rol 3 = admin, rol 2 = profesor, pueden editar cualquier apunte. Otros solo el suyo
+    if rol != 3 and rol != 2 and apunte.get('usuario', {}).get('id') != id_usuario:
         return "No autorizado"
     
     mirequest = {}
@@ -449,7 +452,7 @@ def apunte_pagina(param,apunteid):
     if id_usuario:
         obtenerVotoUsuario(param, apunteid, id_usuario)
     
-    return render_template('apunte.html',param=param)
+    return render_template('apunte.html',param=param, session=session)
     
     
 

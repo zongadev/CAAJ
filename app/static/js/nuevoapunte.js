@@ -84,12 +84,12 @@ function check(ID) {
     errorMsg = "Selecciona una materia";
     errorCambiarColorField(campo);
   } else if (ID === "tags" && campo.value.trim() !== "") {
-    // Validar que cada tag sea una sola palabra (sin espacios) y separadas por coma
-    let tagsArr = campo.value.split(",");
+    // Validar que cada tag sea una sola palabra (sin espacios internos) y separadas por coma
+    let tagsArr = campo.value.split(",").map(tag => tag.trim());
     let invalid = tagsArr.some((tag) => /\s/.test(tag) || tag === "");
     if (invalid) {
       errorMsg =
-        "Cada etiqueta debe ser una sola palabra, separadas por comas y sin espacios";
+        "Cada etiqueta debe ser una sola palabra, separadas por comas";
       errorCambiarColorField(campo);
     }
   }

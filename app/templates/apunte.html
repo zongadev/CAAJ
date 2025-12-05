@@ -115,8 +115,7 @@
             ></button>
             <span id="dislike-count">{{ param.apunte.dislikes or 0 }}</span>
           </div>
-          {% if session['id_usuario'] == param.apunte.usuario.id or
-          session['rol'] == 3 %}
+          {% if (session.get('id_usuario') and param.apunte.usuario and session.get('id_usuario') == param.apunte.usuario.id) or session.get('rol') == 3 or session.get('rol') == 2 %}
           <div class="apunte-actions">
             <a href="/editar_apunte?id={{ param.apunte.id }}" class="edit-btn"
               >✏️ Editar apunte</a
@@ -150,7 +149,7 @@
                   </a>
                   <span class="comment-date">{{ comentario.fecha }}</span>
                   {% if session['id_usuario'] == comentario.id_usuario or
-                  session['rol'] == 3 %}
+                  session['rol'] == 3 or session['rol'] == 2 %}
                   <button
                     class="edit-comment-btn"
                     onclick="editarComentario({{ comentario.id }})"

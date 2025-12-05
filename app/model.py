@@ -49,7 +49,7 @@ def obtenerIdMateriaPorUUID(materia_id):
 def obtenerApuntesxUsuario(result, id_usuario):
     q = """SELECT a.id, a.id_usuario, a.id_materia, a.head, a.content, a.tags, a.fechahora, m.materia
            FROM apunte a
-           LEFT JOIN materia m ON a.id_materia = m.id
+           INNER JOIN materia m ON a.id_materia = m.id
            WHERE a.id_usuario=%s
            ORDER BY a.fechahora DESC;"""
     val = (id_usuario,)
@@ -121,7 +121,7 @@ def buscarGlobal(result, query):
 def obtenerApuntesXMateriaDB(result, materia_id, query=''):
     if query:
         # busqueda con normalizacion de tildes para que funcione mejor
-        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia
+        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia, a.fechahora
                FROM apunte AS a
                INNER JOIN usuario AS u ON a.id_usuario = u.id
                INNER JOIN materia AS m ON m.id = a.id_materia 
@@ -138,7 +138,7 @@ def obtenerApuntesXMateriaDB(result, materia_id, query=''):
         val = (materia_id, search_term, search_term, search_term)
     else:
         # sin busqueda, traemos todos los apuntes de la materia
-        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia
+        q = """SELECT a.id, a.head, a.content, a.tags, u.apodo, m.materia, a.fechahora
                FROM apunte AS a
                INNER JOIN usuario AS u ON a.id_usuario = u.id
                INNER JOIN materia AS m ON m.id = a.id_materia WHERE m.id = %s"""
@@ -148,7 +148,7 @@ def obtenerApuntesXMateriaDB(result, materia_id, query=''):
     if filas and len(filas) > 0:
         result['apuntes'] = [
             {'id': fila[0], 'titulo': fila[1], 'contenido': fila[2],
-             'tags': fila[3], 'usuario': fila[4],'nombre_materia':fila[5]} for fila in filas
+             'tags': fila[3], 'usuario': fila[4],'nombre_materia':fila[5], 'fecha': fila[6]} for fila in filas
         ]
     else:
         result['apuntes'] = []

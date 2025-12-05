@@ -105,8 +105,8 @@
               name="tags"
               type="text"
               class="input redondeado"
-              placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)"
-              pattern="^(\s*|[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*)$"
+              placeholder="Etiquetas (separadas por comas: ej. cálculo, límites, funciones)"
+              pattern="^(\s*|[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9]+(\s*,\s*[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9]+)*)$"
               value="{% if param.apunte %}{{ param.apunte.tags }}{% endif %}"
             />
             <span class="error-msg" id="error-tags"></span>
