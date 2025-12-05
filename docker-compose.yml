@@ -49,13 +49,13 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./static:/app/static
-      - ./_mysql_db.py:/app/_mysql_db.py
-      - ./controller.py:/app/controller.py
-      - ./model.py:/app/model.py
-      - ./route.py:/app/route.py
-      - ./run.py:/app/run.py
-      - ./templates:/app/templates
+      - ./app/static:/app/static
+      - ./app/_mysql_db.py:/app/_mysql_db.py
+      - ./app/controller.py:/app/controller.py
+      - ./app/model.py:/app/model.py
+      - ./app/route.py:/app/route.py
+      - ./app/run.py:/app/run.py
+      - ./app/templates:/app/templates
     environment:
       - DB_HOST=db
       - DB_USER=root
