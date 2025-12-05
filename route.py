@@ -4,110 +4,109 @@ from werkzeug.utils import secure_filename    # Valida caracteres seguros en el 
 from appConfig import config                  # Archivo de configuracion de la aplicación
 from uuid import uuid4                        # Crea Universally Unique IDentifier (UUID)  # https://docs.python.org/es/3/library/uuid.html#uuid.UUID
 import os                                     # Gestiona acceso al sistema operativo local
-
+from controller import *
+from flask import send_from_directory
 
 #Esto es el copypaste del prfoe hayu que ajustarlo, no me voy a poner ahora xd
 def route(app):
-
-    @app.route("/home")  # Dos formas de acceder al home
+    @app.route("/")
+    @app.route("/home")
+    @app.route("/index")  # Dos formas de acceder al home
     def home():
-        cab="Bienvenido al Sistema ABC"
-        colMed="Esto es una prueba de JINJA 2"
-        pie="ABC"
-        return render_template('layout_flex.html', header=cab,colMiddle=colMed,footer=pie)
+        param={}
+        return index_pagina(param)
 
     @app.route('/login')
     def login():
-        return render_template('sigin.html',mensaje="Ingrese su Nombre de usuario: ")
-
-    @app.route('/form') # PROBAR FORMULARIO PARA VER INTERACCION CON EL SERVIDOR
-    def form():
-        return render_template('form_pruebas.html')  
-     
-    @app.route('/recibir_datos',methods = ['POST', 'GET']) # post y get ver diferencias
-    def formrecibe():
-        diRequest={}            # Inicializa un diccionario vacío para almacenar los datos de la solicitud
-        getRequest(diRequest)    # Llena el diccionario con datos de la solicitud (ya sea POST o GET)
-        upload_file(diRequest)  # Maneja la carga de archivos y actualiza el diccionario con la información de la carga de archivos
-        return diRequest        # Devuelve el diccionario que contiene todos los datos de la solicitud y la información de la carga de archivos
-    @app.route('/verimagen')
-    def verimagen():
-        return render_template('verimagen.html')
-
-    @app.route('/menu')
-    def menu():
         param={}
-        obtenerDatosMenu(param)
-        return render_template('menu.html',param=param)
+        return login_pagina(param)
+    
+    @app.route('/logging', methods=['POST'])
+    def logging():
+        param={}
+        return logging_process(param,request)
+    
+    @app.route('/logout')
+    def loggout():
+        return loggout_process()
+    
+    @app.route('/register')
+    def register():
+        param={}
+        return register_pagina(param)
+    
+    @app.route('/registrando', methods=['POST'])
+    def registrando():
+        param={}
+        return register_process(param,request)
+    
+    @app.route('/profile')
+    def profile():
+        perfil_id= request.args.get('id_usuario') or session.get('id_usuario')
+        param={}
+        return profile_pagina(param,perfil_id)
+    
+    @app.route('/votar_apunte', methods=['POST'])
+    def votar_apunte():
+        data= request.get_json()
+        return votar_apunte_process(data)
+    
+    
+    @app.route('/borrar_apunte', methods = ['POST'])
+    def borrar_apunte():
+        return borrar_apunte_process()
+        
+    @app.route('/publicar_comentario', methods =['POST'])
+    def publicar_cometario():
+        param={}
+        return publicar_comentario_process(param,request)
+    
+    @app.route('/borrar_comentario', methods=['POST'])
+    def borrar_comentario():
+        return borrar_comentario_process()
+    
+    @app.route('/materias')
+    def materias():
+        param = {}
+        return materias_pagina(param)
+        
+    @app.route('/buscador')
+    def buscador():
+        materia_id = request.args.get('materia') #este request es un get, flask utiliza por defecto get si no le aclaras
+        param={}
+        return listaapuntes_pagina(param,materia_id)
+    
+    @app.route('/apunte')
+    def apunte():
+        apunte_id = request.args.get('apunte')
+        param={}
+        return apunte_pagina(param,apunte_id)
     
     @app.route('/<name>') # dinámico
     def general(name):
-        if name=="tabla":
-            param={}
-            obtenerDatosTabla(param)
-            res= render_template('tabla.html', param=param)
-        else:
-            res='Pagina "{}" no encontrada'.format(name)
+        res='Pagina "{}" no encontrada'.format(name)
         return res
 
-def getRequest(diResult):  # Función para obtener los datos de la solicitud y almacenarlos en un diccionario
-    if request.method=='POST':                    # Si el método de la solicitud es POST
-        for name in request.form.to_dict().keys():  # Itera sobre las claves del formulario
-            li=request.form.getlist(name)           # Obtiene la lista de valores para cada clave
-            if len(li)>1:                           # Si hay más de un valor
-                diResult[name]=request.form.getlist(name)  # Almacena la lista de valores en el diccionario
-            elif len(li)==1:                        # Si hay un solo valor
-                diResult[name]=li[0]                # Almacena el valor en el diccionario
-            else:                                   # Si no hay valores
-                diResult[name]=""                   # Almacena una cadena vacía en el diccionario
-    elif request.method=='GET':                   # Si el método de la solicitud es GET
-        for name in request.args.to_dict().keys():  # Itera sobre las claves de los argumentos
-            li=request.args.getlist(name)           # Obtiene la lista de valores para cada clave
-            if len(li)>1:                           # Si hay más de un valor
-                diResult[name]=request.args.getlist(name)  # Almacena la lista de valores en el diccionario
-            elif len(li)==1:                        # Si hay un solo valor
-                diResult[name]=li[0]                # Almacena el valor en el diccionario
-            else:                                   # Si no hay valores
-                diResult[name]=""                   # Almacena una cadena vacía en el diccionario
-
- 
-def upload_file (diResult) :
-    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
-    MAX_CONTENT_LENGTH = 1024 * 1024     
-    if request.method == 'POST' :         
-        for key in request.files.keys():  
-            diResult[key]={} 
-            diResult[key]['file_error']=False            
-            
-            f = request.files[key] 
-            if f.filename!="":     
-                #filename_secure = secure_filename(f.filename)
-                file_extension=str(os.path.splitext(f.filename)[1])
-                filename_unique = uuid4().__str__() + file_extension
-                path_filename=os.path.join( config['upload_folder'] , filename_unique)
-                # Validaciones
-                if file_extension not in UPLOAD_EXTENSIONS:
-                    diResult[key]['file_error']=True
-                    diResult[key]['file_msg']='Error: No se admite subir archivos con extension '+file_extension
-                if os.path.exists(path_filename):
-                    diResult[key]['file_error']=True
-                    diResult[key]['file_msg']='Error: el archivo ya existe.'
-                    diResult[key]['file_name']=f.filename
-                try:
-                    if not diResult[key]['file_error']:
-                        diResult[key]['file_error']=True
-                        diResult[key]['file_msg']='Se ha producido un error.'
-
-                        f.save(path_filename)   
-                        diResult[key]['file_error']=False
-                        diResult[key]['file_name_new']=filename_unique
-                        diResult[key]['file_name']=f.filename
-                        diResult[key]['file_msg']='OK. Archivo cargado exitosamente'
- 
-                except:
-                        pass
-            else:
-                diResult[key]={} # viene vacio el input del file upload
+    @app.route('/api/materias')
+    def api_materias():
+        param ={}
+        return materiasJSON(param)
+    
+    @app.route('/uploads/<filename>')
+    def uploaded_file(filename):
+        return send_from_directory('uploads', filename)
+    
+    @app.route('/nuevoapunte')
+    def editor():
+        param ={}
+        return nuevoapunte_pagina(param)
+    
+    @app.route('/publicar', methods = ['POST'])
+    def publicar():
+        param={}
+        return publicar_process(request,param)
+        
+        
 
     # si existe el archivo devuelve True
     # os.path.exists(os.path.join('G:\\directorio\\....\\uploads',"agua.png"))
@@ -115,25 +114,3 @@ def upload_file (diResult) :
     # borrar un archivo
     # os.remove(os.path.join('G:\\directorio\\.....\\uploads',"agua.png"))
 
-
-def obtenerDatosMenu(param):
-    param["menu"]= [{"href":"/home","contenido":"Home"},
-                    {"href":"/login","contenido":"Log In"},
-                    {"href":"/logout","contenido":"Log Out"},
-                    {"href":"/About","contenido":"About"}
-                    #{"href":"#","contenido":'&#128587'}#1F64B  # &#128587; #u'\u2630'
-                   ]
-   
-
-def obtenerDatosTabla(param):
-    param['titulo']="El titulo principal tabla"
-    param['parrafo_01']="Esto es una prueba con una tabla"
-    param['tabla']={"titulos":["NOMBRE","APELLIDO","DNI","EDAD"],
-                      "datos":[["Juan","Perez",1234,23],
-                              ["Laura","Lopez",9632,55],
-                              ["Lucia","Marano",8775,28],
-                              ["Pablo","Cuti",7744,63]
-                        ]
-                    }
-
-    

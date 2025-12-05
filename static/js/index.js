@@ -1,13 +1,12 @@
-document.addEventListener("DOMContentLoaded", () => { //DOM, Document Object model. es decir, cuando ya cargo el html.
-  const suggestions = [ //claramente esta lista no va a ser estatica
-    "Calculo Elementeal",
-    "Calculo Avanzado",
-    "Algebra y Geometria",
-    "Programacion Web y Movil",
-    "Informatica General",
-    "Fisica I",
-  ];
-  const searchInput = document.getElementById("search"); //en la barra
+document.addEventListener("DOMContentLoaded", () => {
+  let suggestions = [];
+  fetch("/api/materias") ///ESTO ES EL AJAX, EL FETCH ES ASINCRONIC
+    .then(response => response.json())
+    .then(data => {
+      suggestions = data;
+    });
+
+  const searchInput = document.getElementById("search");
   const suggestionsBox = document.getElementById("suggestions");
 
   searchInput.addEventListener("input", () => {
@@ -19,17 +18,19 @@ document.addEventListener("DOMContentLoaded", () => { //DOM, Document Object mod
       return;
     }
 
+    // Si suggestions es una lista de objetos con 'nombre'
     const filtered = suggestions.filter((item) =>
-      item.toLowerCase().includes(query)
+      (item.nombre || item).toLowerCase().includes(query)
     );
 
-    if (filtered.length){
+    if (filtered.length) {
       filtered.forEach((item) => {
+        const nombre = item.nombre || item;
         const div = document.createElement("div");
-        div.textContent = item;
+        div.textContent = nombre;
         div.addEventListener("click", () => {
-          searchInput.value = item;
-          suggestionsBox.style.display = "none"; //mover a clases
+          searchInput.value = nombre;
+          suggestionsBox.style.display = "none";
         });
         suggestionsBox.appendChild(div);
       });
@@ -38,4 +39,25 @@ document.addEventListener("DOMContentLoaded", () => { //DOM, Document Object mod
       suggestionsBox.style.display = "none";
     }
   });
+  
+  const searchBtn = document.getElementById("search-btn");
+  if (searchBtn) {
+    searchBtn.addEventListener("click", () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) return;
+
+      // Busca la materia seleccionada en suggestions
+      const materia = suggestions.find(item =>
+        (item.nombre || item).toLowerCase() === query
+      );
+
+      if (materia) {
+        // Redirige usando el uuid o id según tu sistema
+        window.location.href = `/buscador?materia=${materia.uuid || materia.id}`;
+      } else {
+        alert("Materia no encontrada.");
+      }
+    });
+  }
+
 });

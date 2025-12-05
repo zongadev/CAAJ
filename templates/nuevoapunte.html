@@ -4,28 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editor</title>
-    <link rel="stylesheet" href="./static/estilos/editor.css" />
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <link rel="stylesheet" href="./static/css/nuevoapunte.css" />
+    <link rel="stylesheet" href="./static/css/header.css" />
+    <link rel="stylesheet" href="./static/css/global.css" />
+    <link rel="stylesheet" href="./static/css/footer.css" />
   </head>
   <body>
     <div class="grid">
       <header>
         <div class="nav-left">
-          <a class="nav-logo" href="./index.html"></a>
-          <a class="nav-button" href="./materias.html">Materias</a>
-          <a class="nav-button" href="./materias.html">Mis apuntes</a>
+          <a class="nav-logo" href="/index"></a>
+          {% if param.menuHead.mnub01 %}
+            <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
+          {% endif %}
+          {% if param.menuHead.mnub04 %}
+            <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+          {% endif %}
         </div>
-        <a class="login-btn" href="./login.html"> Hola, Usuario </a>
+        <div class="nav-right">
+          {% if param.menuHead.mnub02 %}
+            <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
+          {% endif %}
+          {% if param.menuHead.mnub03 %}
+            <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+          {% endif %}
+        </div>
       </header>
 
       <main class="main-content">
+        {% if param.success_msg %}
+          <div class="alert-success">{{ param.success_msg }}</div>
+        {% endif %}
         <h1 class="titulo">Nueva publicacion</h1>
-        <form class="editor-form">
+        <form class="editor-form" action="/publicar" method="POST" enctype="multipart/form-data">
           <div class="form-group">
             <input
               id="titulo"
+              name="titulo"
               type="text"
               placeholder="Título de la publicación"
               class="input redondeado"
@@ -34,17 +49,18 @@
             <span class="error-msg" id="error-titulo"></span>
           </div>
           <div class="form-group">
-            <select id="materia" class="input redondeado" required>
+            <select id="materia" name="materia" class="input redondeado" required>
               <option value="" disabled selected>Seleccioná una materia</option>
-              <option value="infogen">Informatica General</option>
-              <option value="pwbeb">Programacion Web y Movil</option>
-              <option value="calculo">Calculo Elemental</option>
+              {% for materia in param.materias %}
+                <option value="{{ materia.uuid }}">{{ materia.nombre }}</option>
+              {% endfor %}
             </select>
             <span class="error-msg" id="error-materia"></span>
           </div>
           <div class="form-group">
             <textarea
               id="contenido"
+              name="contenido"
               class="input redondeado"
               rows="10"
               placeholder="Escribí tu publicación. Podes usar Markdown (tenes una guia abajo 😉)..."
@@ -55,6 +71,7 @@
           <div class="form-group">
             <input
               id="tags"
+              name="tags"
               type="text"
               class="input redondeado"
               placeholder="Etiquetas (separadas por comas, sin espacio despues de coma)"
@@ -64,17 +81,8 @@
           </div>
           <div class="form-group">
             <label class="archivo-label" for="archivo">Adjuntar archivo:</label>
-            <input id="archivo" type="file" class="input redondeado" required />
+            <input id="archivo" name="archivo[]" type="file" class="input redondeado" multiple/>
             <span class="error-msg" id="error-archivo"></span>
-          </div>
-          <div class="form-group">
-            <label for="visibilidad">Visibilidad</label>
-            <select id="visibilidad" class="input redondeado" default="visible">
-              <option value="visible" selected>Visible</option>
-              <option value="privado">Privado</option>
-              <option value="oculto">Oculto</option>
-            </select>
-            <span class="error-msg" id="error-visibilidad"></span>
           </div>
           <button type="submit" class="publicar-btn" id="submit-btn">Publicar</button>
         </form>
@@ -129,6 +137,6 @@
         </div>
       </footer>
     </div>
-    <script src="./static/js/editor.js"></script>
+    <script src="./static/js/nuevoapunte.js"></script>
   </body>
 </html>

@@ -5,15 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login-CAAJ</title>
-    <link rel="stylesheet" href="./static/estilos/login.css" />
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <link rel="stylesheet" href="./static/css/login.css" />
+    <link rel="stylesheet" href="./static/css/header.css" />
+    <link rel="stylesheet" href="./static/css/global.css" />
+    <link rel="stylesheet" href="./static/css/footer.css" />
   </head>
   <body>
     <div class="loginfondo">
       <h1>Iniciar sesion</h1>
-      <form id="form" action="#" method="post">
+      {% if param.error_msg_login %}
+        <div class="error-msg-login">{{param.error_msg_login }}</div>
+      {% endif %}
+      {% if param.success_msg %}
+        <div class="success-msg">{{ param.success_msg }}</div>
+      {% endif %}
+      <form id="form" action="/logging" method="POST">
         <div class="form-group">
           <label for="mail">Mail</label>
           <input
@@ -21,6 +27,7 @@
             name="mail"
             id="mail"
             required
+             value="{{ request.form.mail if request.form.mail else '' }}"
             onblur="check(this.id)"
           />
           <span class="error-msg" id="error-mail"></span>
@@ -29,7 +36,7 @@
           <label for="con">Contraseña</label>
           <input
             type="password"
-            name="contra"
+            name="password"
             id="con"
             required
             onblur="check(this.id)"
@@ -41,8 +48,8 @@
           <input type="reset" value="Resetear" />
           <br />
           <div class="links">
-            <a href="register.html">Registrarse</a>
-            <a href="index.html">Volver</a>
+            <a href="register">Registrarse</a>
+            <a href="index">Volver</a>
           </div>
         </div>
       </form>

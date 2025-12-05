@@ -4,42 +4,62 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CAAJ</title>
-    <link rel="stylesheet" href="./static/estilos/profile.css" />
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <link rel="stylesheet" href="./static/css/profile.css" />
+    <link rel="stylesheet" href="./static/css/header.css" />
+    <link rel="stylesheet" href="./static/css/global.css" />
+    <link rel="stylesheet" href="./static/css/footer.css" />
   </head>
   <body>
     <header>
-        <div class="nav-left">
-          <a class="nav-logo" href="./index.html"></a>
-          <a class="nav-button" href="./materias.html">Materias</a>
-        </div>
-        <a class="login-btn" href="./login.html">
-          Iniciar sesión
-        </a>
-      </header>
+      <div class="nav-left">
+        <a class="nav-logo" href="/index"></a>
+        {% if param.menuHead.mnub01 %}
+          <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
+        {% endif %}
+        {% if param.menuHead.mnub04 %}
+          <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+        {% endif %}
+      </div>
+      <div class="nav-right">
+        {% if param.menuHead.mnub02 %}
+          <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
+        {% endif %}
+        {% if param.menuHead.mnub03 %}
+          <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+        {% endif %}
+      </div>
+    </header>
 
     <div class="main">
       <div class="content-grid">
         <div class="page-sidebar">
           <h2>Información Personal</h2>
-            <p>Nombre: <span id="nombre">NOM</span></p>
-            <p>Apellido: <span id="apellido">APELL</span></p>
-            <p>Usuario: <span id="usuario">USU</span></p> 
+          <p>Nombre: <span id="nombre">{{ param.usuario.nombre }}</span></p>
+          <p>Apellido: <span id="apellido">{{ param.usuario.apellido }}</span></p>
+          <p>Usuario: <span id="usuario">{{ param.usuario.apodo }}</span></p>
         </div>
 
         <div class="note-content">
-          <h1>Perfil de Usuario</h1>  
-            <h2>Bienvenido al perfil</h2>
-            <p>Esta es la sección de perfil donde puedes ver tu información personal y apuntes.</p>
+          <h1>Perfil de {{ param.usuario.apodo }}</h1>
+          <h2>Bienvenido al perfil</h2>
+          <p>Esta es la sección de perfil donde puedes ver la información personal y apuntes del usuario.</p>
 
-            <h2 class="tus-apuntes">Tus apuntes</h2>
-            <div class="lista-apuntes">
-                <a href="./apunte.html" href id="apunte">Apunte 1</a>
-                <a href="./apunte2.html" id="apunte2">Apunte 2</a>
-                <a href="./apunte2.html" id="apunte3">Apunte 3</a>
-            </div>
+          <h2 class="tus-apuntes">Apuntes de {{ param.usuario.apodo }}</h2>
+          <div class="cards">
+            {% if param.apuntes and param.apuntes|length > 0 %}
+              {% for apunte in param.apuntes %}
+                <a class="card" href="/apunte?apunte={{ apunte.id }}">
+                  <h2 class="card-title">{{ apunte.titulo }}</h2>
+                  <p class="card-description">{{ apunte.contenido|truncate(64, True, '...') }}</p>
+                  {% if apunte.tags %}
+                    <p class="card-tags">Tags: {{ apunte.tags }}</p>
+                  {% endif %}
+                </a>
+              {% endfor %}
+            {% else %}
+              <p>No tiene apuntes aún.</p>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>

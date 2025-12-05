@@ -55,7 +55,7 @@ function check(ID) {
   if (errorMsg) {
     setErrorMsg(ID, errorMsg);
     campo.setCustomValidity(errorMsg);
-    campo.reportValidity();
+
   } else {
     clearErrorMsg(ID);
     campo.setCustomValidity("");

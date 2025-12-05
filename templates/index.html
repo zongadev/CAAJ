@@ -4,21 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CAAJ</title>
-    <link rel="stylesheet" href="./static/estilos/index.css" />
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <link rel="stylesheet" href="./static/css/index.css" />
+    <link rel="stylesheet" href="./static/css/header.css" />
+    <link rel="stylesheet" href="./static/css/global.css" />
+    <link rel="stylesheet" href="./static/css/footer.css" />
   </head>
   <body>
     <div class="grid">
       <header>
         <div class="nav-left">
-          <a class="nav-logo" href="./index.html"></a>
-          <a class="nav-button" href="./materias.html">Materias</a>
+          <a class="nav-logo" href="/index"></a>
+          {% if param.menuHead.mnub01 %}
+            <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
+          {% endif %}
+          {% if param.menuHead.mnub04 %}
+            <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+          {% endif %}
         </div>
-        <a class="login-btn" href="./login.html">
-          Iniciar sesión
-        </a>  
+        <div class="nav-right">
+          {% if param.menuHead.mnub02 %}
+            <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
+          {% endif %}
+          {% if param.menuHead.mnub03 %}
+            <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+          {% endif %}
+        </div>
       </header>
 
       <main class="main-content">
@@ -26,7 +36,7 @@
         <div class="search-container">
           <div class="search-bar">
             <input type="text" id="search" placeholder="Buscar..." />
-            <span src="./static/imagenes/search-outline.svg" alt="" />
+            <img id="search-btn" src="./static/img/search-outline.svg" al t="Buscar" style="cursor:pointer;" />       
           </div>
 
           <div class="suggestions" id="suggestions"></div>

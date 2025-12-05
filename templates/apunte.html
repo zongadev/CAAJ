@@ -3,198 +3,118 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CAAJ</title>
-    <link rel="stylesheet" href="./static/estilos/apunte.css" />
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <title>{{ param.apunte.titulo if param.apunte.titulo else "CAAJ" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/apunte.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}" />
   </head>
   <body>
     <header>
-        <div class="nav-left">
-          <a class="nav-logo" href="./index.html"></a>
-          <a class="nav-button" href="./materias.html">Materias</a>
-        </div>
-        <a class="login-btn" href="./login.html">
-          Iniciar sesión
-        </a>
-      </header>
+      <div class="nav-left">
+        <a class="nav-logo" href="/index"></a>
+        {% if param.menuHead.mnub01 %}
+          <a class="{{ param.menuHead.mnub01.class }}" href="{{ param.menuHead.mnub01.href }}">{{ param.menuHead.mnub01.content }}</a>
+        {% endif %}
+        {% if param.menuHead.mnub04 %}
+          <a class="{{ param.menuHead.mnub04.class }}" href="{{ param.menuHead.mnub04.href }}">{{ param.menuHead.mnub04.content }}</a>
+        {% endif %}
+      </div>
+      <div class="nav-right">
+        {% if param.menuHead.mnub02 %}
+          <a class="{{ param.menuHead.mnub02.class }}" href="{{ param.menuHead.mnub02.href }}">{{ param.menuHead.mnub02.content }}</a>
+        {% endif %}
+        {% if param.menuHead.mnub03 %}
+          <a class="{{ param.menuHead.mnub03.class }}" href="{{ param.menuHead.mnub03.href }}">{{ param.menuHead.mnub03.content }}</a>
+        {% endif %}
+      </div>
+    </header>
 
     <main class="main">
       <div class="content-grid">
-        <nav class="page-index">
-          <h2 class="item">Índice</h2>
-          <ul class="item">
-            <li><a href="#section1">Introducción</a></li>
-            <li><a href="#section2">Capítulo 1</a></li>
-            <li><a href="#section3">Capítulo 2</a></li>
-            <li><a href="#section4">Capítulo 3</a></li>
-            <li><a href="#section5">Capítulo 4</a></li>
-            <li><a href="#section6">Capítulo 5</a></li>
-          </ul>
-          <div class="vote-section">
-            <a href="#" class="vote-btn upvote" title="Me gusta"></a>
-            <span class="vote-count">23</span>
-            <a href="#" class="vote-btn downvote" title="No me gusta"></a>
-          </div>
-        </nav>
-
         <article class="note-article">
           <div class="article-header">
-            <h1 id="section1">
-              Crónicas de la Amistad Interestelar: Por qué Lucas y Gonza son
-              Mejores Amigos Multiversales
-            </h1>
-            <p class="author">por Juan Pérez</p>
+            <h1 id="section1">{{ param.apunte.titulo }}</h1>
+            <p class="author">
+              por
+              {% if param.apunte.usuario and param.apunte.usuario.apodo %}
+                <a href="/profile?id_usuario={{ param.apunte.usuario.id }}">
+                  {{ param.apunte.usuario.apodo }}
+                </a>
+              {% else %}
+                Anónimo
+              {% endif %}
+            </p>
           </div>
 
-          <p>
-            Dicen que las verdaderas amistades se forjan en los lugares más
-            inesperados: en una charla a las 2 AM sobre si el ketchup cuenta
-            como sopa, en una guerra de memes, o cuando accidentalmente invocás
-            a un espíritu intergaláctico con una licuadora.
-            <br />
-            Pero esta no es una amistad cualquiera. Esta es la crónica bizarra,
-            interdimensional y científicamente improbable de cómo Lucas y Gonza
-            se convirtieron en mejores amigos por decreto del multiverso.
+          <div class="apunte-content">
+            {{ param.apunte.contenido | safe }}
+          </div>
 
-            <br />
-            Este relato no busca lógica. Si sos de esas personas que necesitan
-            sentido en todo, mejor andate ahora. Acá hay yogures parlantes,
-            pulpos que dan consejos existenciales, y licuadoras que te escupen a
-            otras realidades.
+          <h3>Archivos adjuntos</h3>
+          <div id="media-list" class="media-list">
+            {% if param.media and param.media|length > 0 %}
+              {% for archivo in param.media %}
+                {% set ext = archivo.path.split('.')[-1]|lower %}
+                <div class="media-item">
+                  {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                    <img src="{{ archivo.path }}" alt="{{ archivo.nombre }}" class="media-img"/>
+                    <div>
+                      <a href="{{ archivo.path }}" download="{{ archivo.nombre }}">Descargar imagen</a>
+                    </div>
+                  {% else %}
+                    <a href="{{ archivo.path }}" download="{{ archivo.nombre }}">{{ archivo.nombre }}</a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="media-vacia">No hay archivos adjuntos.</div>
+            {% endif %}
+          </div>
 
-            <br />
-            Así que acomodate… que empieza el delirio.
-          </p>
-
-          <h2 class="article-subheading" id="section2">
-            Capítulo 1: El Día que el Yogurles Parló
-          </h2>
-          <p>
-            Todo comenzó un martes a las 3:33 AM. Lucas, víctima de una mezcla
-            insensata de mate, Red Bull y empanada de atún, se levantó insomne.
-            Fue a la heladera… y ahí lo escuchó.
-            <br />
-            Un yogur vencido desde 2019, llamado Yogurles, le habló con voz
-            grave y sabia:
-            <br />
-            —Lucas… tú y Gonza están destinados a formar el dúo más legendario
-            del multiverso...
-            <br />
-            Lucas, medio dormido, anotó todo en una servilleta. Porque uno nunca
-            sabe.
-          </p>
-
-          <h2 class="article-subheading" id="section3">
-            Capítulo 2: El Pulpo Chamán y el Algoritmo del Bro
-          </h2>
-          <p>
-            Mientras tanto, Gonza buscaba respuestas en el Mercado de Pulgas
-            Cósmicas de Villa Ortúzar. Allí, un pulpo chamán llamado Señor
-            Tentaculín le leyó el aura con tinta azul y le dijo:
-            <br />
-            —Tu energía vibra en la misma frecuencia que la de Lucas. Son como
-            dos routers sincronizados en WiFi emocional.
-
-            <br />Conmovido, Gonza se compró una gorra que decía “Lucas & Gonza
-            Bros 4Ever” en Comic Sans. Dijo que era por joda. Pero todos sabían
-            que era real.
-          </p>
-
-          <h2 class="article-subheading" id="section4">
-            Capítulo 3: Smoothie Dimensional y Bigotes de Glitter
-          </h2>
-          <p>
-            Una tarde, mientras intentaban preparar un smoothie de banana y
-            menta, activaron sin querer la función “teletransportación astral”
-            de una licuadora encantada.
-
-            <br />Fueron absorbidos a la Dimensión Cuatro y Media, donde el
-            tiempo se mide en risas y los abrazos tienen valor legal.
-            <br />
-            Allí, se vieron como gatos antropomórficos con bigotes de glitter.
-            Se dieron un choque de cinco. Rieron. Ganaron 200 créditos
-            interdimensionales.
-            <br />
-            Los gastaron en una pecera de recuerdos compartidos.
-          </p>
-
-          <h2 class="article-subheading" id="section5">
-            Capítulo 4: El Regreso y el Ananá de la Verdad
-          </h2>
-          <p>
-            De vuelta en la Tierra, notaron un pequeño cambio: cada vez que se
-            miraban cómplices, sonaba de fondo un solo de saxofón funky.<br />
-            Un día, partiendo un ananá (ritual aprendido en su viaje),
-            encontraron inscrita una frase:<br />
-            —La verdadera amistad no tiene límites. Solo playlists compartidas y
-            memes eternos.
-            <br />
-            Ahí supieron que estaban destinados a bancarse para siempre. Como
-            dos medias sobrevivientes del centrifugado existencial.
-          </p>
-
-          <h2 class="article-subheading" id="section6">
-            Capítulo 5: Y Vivieron… y También Streamearon
-          </h2>
-          <p>
-            Hoy, Lucas y Gonza comparten todo: desde rankings de empanadas hasta
-            partidas épicas en juegos retro. Tienen un podcast llamado “Entre
-            Tuercas y Confidencias” donde filosofan sobre cosas importantes como
-            si las tortugas tienen ansiedad.<br />
-            A veces discuten si la chocolatada va con agua o con leche, pero
-            siempre se reconcilian mirando documentales sobre nutrias.<br />
-            Porque sí, son amigos. Porque sí, se quieren. Porque un yogur les
-            habló, un pulpo los iluminó, y una licuadora los llevó a su destino
-            de bros interdimensionales.
-          </p>
-          <!-- esta medio confuso capaz lo de comment
-          el de aca abajo es la caja de comentarios y el de arriba
-          es el textbox para que los escribas-->
-          <div class="comment-box"> 
-            <label for="comment">Deja tu comentario:</label>
-            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
+          <div class="vote-section">
+            <button class="vote-btn upvote" onclick="votarApunte('like')" title="Me gusta"></button>
+            <span id="like-count">{{ param.apunte.likes or 0 }}</span>
+            <button class="vote-btn downvote" onclick="votarApunte('dislike')" title="No me gusta"></button>
+            <span id="dislike-count">{{ param.apunte.dislikes or 0 }}</span>
+          </div>
+           {% if session['id_usuario'] == param.apunte.usuario.id or session['rol'] == 3 %}
+            <form id="form-borrar-apunte" method="post" action="/borrar_apunte" onsubmit="return confirm('¿Seguro que deseas borrar este apunte?');">
+              <input type="hidden" name="id_apunte" value="{{ param.apunte.id }}">
+              <button type="submit" class="delete-btn">Borrar apunte</button>
+            </form>
+            {% endif %}
+          <form id="formComentario" onsubmit="return false;">
+            <label for="comentario">Deja tu comentario:</label>
+            <textarea id="comentario" name="comentario" rows="4" cols="50" placeholder="Escribe tu comentario aquí..."></textarea>
+            <input type="hidden" name="id_apunte" value="{{ request.args.get('apunte') }}">
             <span class="error-msg" id="error-comment"></span>
-            <button type="submit" id="publicar-comentario-btn submit-btn">Publicar comentario</button>
-          </div>
+            <button type="button" onclick="publicarComentario()">Publicar comentario</button>
+          </form>
           <div class="commentaries-section">
             <h3>Comentarios</h3>
-            <div class="comment">
-              <div class="author"> 
-                <img src="no hay foto xd" class="author-img">
-                <label for="author"> user </label><br>
-              </div>
-              <label for="author-comment"> Este es el comentario de un usuario random</label>
+            <div id="comments-list">
+              <!-- Aquí se agregan los comentarios nuevos -->
+              {% for comentario in param.comentarios %}
+                <div class="comment">
+                  <div class="author">
+                    <a href="/profile?id_usuario={{ comentario.id_usuario }}">
+                      <strong>{{ comentario.apodo }}</strong>
+                    </a>
+                    <span class="comment-date">{{ comentario.fecha }}</span>
+                    {% if session['id_usuario'] == comentario.id_usuario or session['rol'] == 3 %}
+                      <form method="post" action="/borrar_comentario" style="display:inline;">
+                        <input type="hidden" name="id_comentario" value="{{ comentario.id }}">
+                        <button type="submit" class="delete-btn" style="margin-left:10px;" onclick="return confirm('¿Eliminar este comentario?');">🗑️</button>
+                      </form>
+                    {% endif %}
+                  </div>
+                  <div class="comment-text">
+                    {{ comentario.comentario }}
+                  </div>
+                </div>
+              {% endfor %}
             </div>
-
-        <!-- Copio y pego para que haya otro pero es puro ejemplo BORRER ENTRE COMENTARIOS-->
-        <div class="comment">
-          <div class="author"> 
-            <img src="no hay foto xd" class="author-img">
-            <label for="author"> user </label><br>
-          </div>
-          <label for="author-comment"> Este es el comentario de un usuario random</label>
-        </div>
-
-        <div class="comment">
-          <div class="author"> 
-            <img src="no hay foto xd" class="author-img">
-            <label for="author"> user3 </label><br>
-          </div>
-          <label for="author-comment"> Este es el comentario del que usted profe penso que era un burro gil de mierda y la re concha de tu madre </label>
-        </div>
-
-        <div class="comment">
-          <div class="author"> 
-            <img src="no hay foto xd" class="author-img">
-            <label for="author"> user4 </label><br>
-          </div>
-          <label for="author-comment"> Este es el comentario de un usuario random</label>
-        </div>
-
-        <!-- Copio y pego para que haya otro pero es puro ejemplo BORRAR ENTRE COMENTARIOS EN OTRO MOMENTO-->
-
           </div>
         </article>
       </div>
@@ -208,6 +128,9 @@
         <a href="http://google.com"><span class="logo-twitter"></span></a>
       </div>
     </footer>
-    <script src="./static/js/comments.js"></script>
+    <script src="{{ url_for('static', filename='js/comments.js') }}"></script>
+    <script src="/static/js/ajax.js"></script>
+    <script src="/static/js/apunte.js"></script>
+   
   </body>
 </html>

@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Editors
+.vscode/        # VSCode
+.idea/          # PyCharm/IntelliJ
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Build artifacts
+dist/
+build/
+*.egg
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Database files (e.g., SQLite)
+*.sqlite3
+*.db
+
+# Uploaded media (if not stored in a cloud service)
+media/
+
+# Configuration files containing sensitive information (e.g., API keys, database credentials)
+# Be explicit about these, don't use wildcards unless necessary.
+*.env
+.env
+config.ini
+settings_local.py # Example for Django local settings
+
+# Other common exclusions
+celerybeat-schedule.*
+.mypy_cache/
+.ruff_cache/

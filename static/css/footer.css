@@ -27,25 +27,25 @@ footer {
 }
 
 .logo-facebook {
-  background: url("../imagenes/logo-facebook.svg") no-repeat center;
+  background: url("../img/logo-facebook.svg") no-repeat center;
   background-size: contain;
   pointer-events: none;
 }
 
 .logo-instagram {
-  background: url("../imagenes/logo-instagram.svg") no-repeat center;
+  background: url("../img/logo-instagram.svg") no-repeat center;
   background-size: contain;
   pointer-events: none;
 }
 
 .logo-twitter {
-  background: url("../imagenes/logo-twitter.svg") no-repeat center;
+  background: url("../img/logo-twitter.svg") no-repeat center;
   background-size: contain;
   pointer-events: none;
 }
 
 .logo-linkedin {
-  background: url("../imagenes/logo-linkedin.svg") no-repeat center;
+  background: url("../img/logo-linkedin.svg") no-repeat center;
   background-size: contain;
   pointer-events: none;
 }

@@ -37,7 +37,7 @@ def cerrarBD(mydb):
         except mysql.connector.Error as e:
             print(f"Error al cerrar la base de datos: {e}")
 
-def consultaDB(mydb, query="", params=None, title=False,dictionary=False):
+def consultaDB(mydb, sQuery="", param=None, title=False,dictionary=False):
     """
     Ejecuta una consulta SQL en la base de datos.
     
@@ -48,42 +48,46 @@ def consultaDB(mydb, query="", params=None, title=False,dictionary=False):
     :return: Resultado de la consulta.
     """
     resultado = None
+    cursor= None
     if mydb is not None:
+        
         try:
             cursor = mydb.cursor()
-            cursor.execute(query, params)
+            if param is not None:
+                cursor.execute(sQuery, param)
+            else:
+                cursor.execute(sQuery)
             resultado = cursor.fetchall()
-            if title:
+            if title and resultado is not None:
                 resultado.insert(0,cursor.column_names)
-            if dictionary:
+            if dictionary and resultado is not None:
                 keys=cursor.column_names
                 # Para obtener una respuesta de lista de diccionarios
                 resultado = [dict(zip(keys, row)) for row in resultado]
         except mysql.connector.Error as e:
             print(f"Error al consultar: {e}")
         finally:
-            cursor.close()
+            if cursor is not None:
+                cursor.close()
     return resultado
 
 
-def ejecutarDB(mydb,query="",params=None):
-    ''' 
-    Realiza las consultas 'INSERT' 'UPDATE' 'DELETE'
-    :param recibe: 'mydb' una conexion a una base de datos
-    :param recibe:'sQuery' la cadena con la consulta (query) sql.
-    :param recibe:'params' valores separados anti sql injection
-    :return: la cantidad de filas afectadas con la query.
-    '''
-    resultado=None
+def ejecutarDB(mydb, query="", param=None):
+    resultado = None
     try:
-        cursor = mydb.cursor()    
-        cursor.execute(query)
+        cursor = mydb.cursor()
+        if param is not None:
+            cursor.execute(query, param)
+        else:
+            cursor.execute(query)
         mydb.commit()
         resultado = cursor.rowcount
+        print("resultado", resultado)
     except mysql.connector.Error as e:
         mydb.rollback()
         print(f"Error al intentar ejecutar una accion: {e} ")
-        
+    return resultado
+
 ## Fuciones secundarias. Estas funciones son las que seran llamadas
 ## por el model, permitiendo iniciar la conexion, consultar/ejecutar y cerrar la conexion a traves de una funcion
 
@@ -104,7 +108,7 @@ def selectDB(configDB=None,sql="",param=None,dictionary=False,title=False):
         cerrarBD(mydb)
     return resQuery
 
-def insertDB(configDB=None,sql="",param=None):
+def insertDB(configDB=None,sql="",param={}):
     ''' ########## INSERT
         :param 'configDB': un 'dict' con los parámetros de conexion
         :param 'sql': una cadena con la consulta sql
@@ -113,9 +117,32 @@ def insertDB(configDB=None,sql="",param=None):
     res=None
     if configDB!=None:
         mydb=conectarBD(configDB)
-        res=ejecutarDB(mydb,sQuery=sql,param=param)
+        res=ejecutarDB(mydb,query=sql,param=param)
         cerrarBD(mydb)
     return res
+
+def insertDB_return_id(configDB=None, sql="", param=None):
+    '''
+    INSERT que retorna el id del registro insertado.
+    '''
+    id = None
+    if configDB is not None:
+        mydb = conectarBD(configDB)
+        try:
+            cursor = mydb.cursor()
+            if param is not None:
+                cursor.execute(sql, param)
+            else:
+                cursor.execute(sql)
+            mydb.commit()
+            id = cursor.lastrowid
+        except Exception as e:
+            mydb.rollback()
+            print(f"Error al insertar y obtener id: {e}")
+        finally:
+            cursor.close()
+            cerrarBD(mydb)
+    return id
 
 def updateDB(configDB=None,sql="",param=None):
     ''' ########## UPDATE
@@ -139,11 +166,11 @@ def deleteDB(configDB=None,sql="",param=None):
     res=None
     if configDB!=None:
         mydb=conectarBD(configDB)
-        res=ejecutarDB(mydb,sQuery=sql,param=param)
+        res=ejecutarDB(mydb,query=sql,param=param)
         cerrarBD(mydb)
     return res
 
 BASE={ "host":"localhost",
         "user":"root",
         "pass":"",
-        "dbname":"base"}
+        "dbname":"caaj"}

@@ -5,34 +5,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
-    <link rel="stylesheet" href="./static/estilos/register.css">
-    <link rel="stylesheet" href="./static/estilos/header.css" />
-    <link rel="stylesheet" href="./static/estilos/global.css" />
-    <link rel="stylesheet" href="./static/estilos/footer.css" />
+    <link rel="stylesheet" href="./static/css/register.css">
+    <link rel="stylesheet" href="./static/css/header.css" />
+    <link rel="stylesheet" href="./static/css/global.css" />
+    <link rel="stylesheet" href="./static/css/footer.css" />
     
 </head>
 <body>
     <div class="registerfondo">
         <h1>Registrarse</h1>
-    <form id="regis-form" action="" >
+        {% if param.error_msg_regis %}
+            <div class="error-msg-regis">{{ param.error_msg_regis }}</div>
+        {% endif %}
+    <form id="regis-form" action="/registrando" method="POST" > 
+        <div class="form-group">
+            <label for="apodo01">Apodo</label>
+            <input type="text" name="apodo" id="apodo01" required onblur="check(this.id)"
+                   value="{{ param.form_data.apodo if param.form_data and param.form_data.apodo else '' }}">
+            <span class="error-msg" id="error-apodo01"></span>
+        </div>
         <div class="form-group">
             <label for="nom01">Nombre</label>
-            <input type="text" name="nombre" id="nom01" required title="Solo letras y espacios." onblur="check(this.id)">
+            <input type="text" name="nombre" id="nom01" required onblur="check(this.id)"
+                   value="{{ param.form_data.nombre if param.form_data and param.form_data.nombre else '' }}">
             <span class="error-msg" id="error-nom01"></span>
         </div>
         <div class="form-group">
             <label for="ape01">Apellido</label>
-            <input type="text" name="apellido" id="ape01" required onblur="check(this.id)" >
+            <input type="text" name="apellido" id="ape01" required onblur="check(this.id)"
+                   value="{{ param.form_data.apellido if param.form_data and param.form_data.apellido else '' }}">
             <span class="error-msg" id="error-ape01"></span>
         </div>
         <div class="form-group">
+            <label for="dni01">DNI</label>
+            <input type="text" name="dni" id="dni01" required onblur="check(this.id)"
+                   value="{{ param.form_data.dni if param.form_data and param.form_data.dni else '' }}">
+            <span class="error-msg" id="error-dni01"></span>
+        </div>
+        <div class="form-group">
             <label for="mail01">Mail</label>
-            <input type="email" name="mail" id="mail01" required onblur="check(this.id)" >
+            <input type="email" name="mail" id="mail01" required onblur="check(this.id)"
+                   value="{{ param.form_data.mail if param.form_data and param.form_data.mail else '' }}">
             <span class="error-msg" id="error-mail01"></span>
         </div>
         <div class="form-group">
             <label for="con01">Contraseña</label>
-            <input type="password" name="contra" id="con01" required onblur="check(this.id)">
+            <input type="password" name="contra" id="con01" required onblur="check(this.id)"
+                   value="{{ param.form_data.contra if param.form_data and param.form_data.contra else '' }}">
             <span class="error-msg" id="error-con01"></span>
         </div>
         <div class="form-footer">
@@ -40,8 +59,8 @@
             <input type="reset" value="Resetear">
             <br>
             <div class="links">
-                <a href="login.html">Iniciar sesión</a>
-                <a href="index.html">Volver</a>
+                <a href="login">Iniciar sesión</a>
+                <a href="index">Volver</a>
             </div>
         </div>
     </form>

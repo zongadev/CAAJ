@@ -38,9 +38,6 @@ function check(ID) {
   ) {
     errorMsg = "Selecciona una materia";
     errorCambiarColorField(campo);
-  } else if (ID === "archivo" && (!campo.files || campo.files.length === 0)) {
-    errorMsg = "Debes adjuntar un archivo";
-    errorCambiarColorField(campo);
   } else if (ID === "tags" && campo.value.trim() !== "") {
     // Validar que cada tag sea una sola palabra (sin espacios) y separadas por coma
     let tagsArr = campo.value.split(",");
@@ -54,7 +51,6 @@ function check(ID) {
   if (errorMsg) {
     setErrorMsg(ID, errorMsg);
     campo.setCustomValidity(errorMsg);
-    campo.reportValidity();
   } else {
     clearErrorMsg(ID);
     normalCambiarColorField(campo);
